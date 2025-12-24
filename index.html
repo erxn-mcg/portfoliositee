@@ -330,7 +330,7 @@
      - Reverse rows (TikTok/LinkedIn): keep right aligned */
   .social-row .social-text,
   .social-row .social-text-2{
-    text-align: center;   /* change to left if you prefer */
+    text-align: center !important;   /* change to left if you prefer */
   }
 
   .social-row.reverse .social-text,
@@ -346,8 +346,20 @@
 
 .social-row.reverse .social-text,
 .social-row.reverse .social-text-2{
-  text-align: center !important;
+  text-align: center;
 }
+
+@media (min-width: 901px){
+  .social-row.reverse .social-info{
+    text-align: right !important;
+    align-items: flex-end;
+  }
+
+  .social-row.reverse .social-text,
+  .social-row.reverse .social-text-2{
+    margin-left: auto;
+  }
+}        
 
 
     </style>
