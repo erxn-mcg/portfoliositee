@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>erinmerylstudy | Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@1,700&display=swap');
+
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #ffffff;
+            --white-section: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: 'Andika', sans-serif; overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        nav { position: fixed; top: 25px; left: 50%; transform: translateX(-50%) translateY(-120px); z-index: 100; background: #fff; padding: 12px 30px; border-radius: 100px; display: flex; gap: 25px; transition: 0.6s; border: 1px solid #ddd; }
+        nav.visible { transform: translateX(-50%) translateY(0); }
+        nav a { color: #000; text-decoration: none; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; }
+
+        /* --- HERO & INTRO --- */
+        .hero-layer { height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: fixed; top: 0; z-index: 10; pointer-events: none; }
+        .name-header { font-size: 7vw; font-weight: 700; }
+        .thumbnail-container { width: 320px; height: 320px; background: #1a1a1a; border-radius: 100%; overflow: hidden; }
+        .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); }
+
+        .intro-wrapper { height: 250vh; position: relative; z-index: 5; }
+        .intro-sticky { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .who-text { font-size: 22vw; font-weight: 700; transform: rotateX(-90deg); opacity: 0; }
+        
+        /* --- VIDEO CLUSTER --- */
+        .video-space { position: relative; height: 180vh; background: var(--bg-color); z-index: 15; overflow: hidden; }
+        .floating-video { position: absolute; aspect-ratio: 9/16; background: #1a1a1a; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .floating-video video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- SECTION BASE --- */
+        .section-white { position: relative; z-index: 20; background: var(--white-section); color: #000; padding: 80px 0 120px 0; border-radius: 60px 60px 0 0; margin-top: -10vh; }
+        .content-container { padding: 0 12%; }
+
+        /* --- WHO AM I CONTENT --- */
+        .who-am-i-label { font-size: 1.5rem; font-style: italic; margin-bottom: 20px; }
+        .morph-container { position: relative; margin-bottom: 60px; height: 8vw; }
+        .who-main-name { position: absolute; top: 0; left: 0; font-size: 6vw; font-weight: 700; line-height: 1; white-space: nowrap; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .name-study { opacity: 0; transform: translateY(20px); }
+
+        .who-grid-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; margin-bottom: 80px; }
+        .stack-area { position: relative; height: 400px; display: flex; align-items: center; }
+        .arrow-btn { font-size: 2.5rem; opacity: 0.3; font-weight: 300; cursor: pointer; transition: 0.3s; background: none; border: none; padding: 20px; user-select: none; }
+        .arrow-btn:hover { opacity: 1; transform: scale(1.2); }
+        .stack-container { position: relative; flex-grow: 1; height: 350px; perspective: 1200px; cursor: pointer; margin: 0 10px; }
+        .project-card { position: absolute; width: 100%; height: 100%; background: #000; border: 1px solid #333; border-radius: 35px; padding: 45px; display: flex; flex-direction: column; justify-content: center; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.05); pointer-events: none; }
+        .project-card.active { pointer-events: auto; }
+        .project-card h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.6; margin-bottom: 10px; color: #fff; }
+        .project-card h3 { font-size: 2.2rem; font-weight: 700; color: #fff; }
+        .description-text { font-size: 1.6rem; line-height: 1.6; border-top: 1px solid #000; padding-top: 20px; }
+
+        /* --- MODERN IMAGE GRID (REFINED) --- */
+        .modern-creative-grid { 
+            display: grid; 
+            grid-template-columns: repeat(12, 1fr); 
+            grid-auto-rows: 250px; /* Forces rows to be equal height */
+            gap: 20px; 
+            margin: 100px 0 150px; 
+        }
+        .grid-item { border-radius: 25px; overflow: hidden; background: #f9f9f9; display: flex; align-items: center; justify-content: center; }
+        .grid-item.text-block { padding: 40px; font-size: 2.5vw; font-weight: 700; line-height: 1.1; background: #fff; border: 1px solid #eee; }
+        
+        .gi-1 { grid-column: 1 / 5; grid-row: 1 / 3; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; padding: 40px; } /* Height Driver */
+        .gi-2 { grid-column: 5 / 7; grid-row: 1 / 2; }
+        .gi-3 { grid-column: 7 / 13; grid-row: 1 / 2; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; padding: 40px; text-align: center; }
+        .gi-4 { grid-column: 5 / 13; grid-row: 2 / 3; height: auto; }
+        
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
+        .grid-item:hover img { filter: grayscale(0%); }
+
+        .gi-1-logo { width: 20%; height: 20%; border-radius: 100%; }
+
+        /* Substack Pill styling */
+        .grid-substack { justify-content: space-between; padding: 10px; }
+        .grid-substack h4 { font-size: 2vw; font-weight: 700; }
+        .substack-pill { 
+            padding: 10px 25px; background: #000; color: #fff; border-radius: 100px; 
+            text-decoration: none; font-size: 0.9rem; font-weight: 700; transition: 0.3s;
+        }
+        .substack-pill:hover { background: #333; transform: scale(1.05); }
+
+        /* --- SOCIAL GRID --- */
+        .section-title { font-size: 4vw; font-weight: 700; margin-bottom: 60px; }
+        .social-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; margin-bottom: 120px; }
+        .social-row.reverse { grid-template-columns: 1.2fr 1fr; }
+        .social-image-box { background: #f0f0f0; border-radius: 30px; aspect-ratio: 4/3; overflow: hidden; border: 1px solid #eee; }
+        .social-image-box img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s; }
+        .social-image-box:hover img { filter: grayscale(0%); }
+        .social-info h2 { font-size: 2.5rem; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 2px; }
+        .stats-flex { display: flex; gap: 30px; margin-bottom: 20px; }
+        .stat-item b { font-size: 2rem; display: block; line-height: 1; }
+        .stat-item span { font-size: 0.7rem; text-transform: uppercase; opacity: 0.5; font-weight: 700; }
+        .social-text { font-size: 1rem; line-height: 1.5; border-top: 2px solid #000; padding-top: 15px; width: 85%; }
+        .social-text-2 { font-size: 1rem; line-height: 1.5; padding-top: 15px; width: 85%; }
+
+        /* --- CONTACT & FOOTER --- */
+        .contact-reveal-wrap { background: var(--bg-color); position: relative; z-index: 19; padding: 150px 0 80px 0; }
+        .contact-fixed-footer { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .reveal-item { opacity: 0; transform: translateY(30px); transition: 0.8s; }
+        .reveal-item.popped { opacity: 1; transform: translateY(0); }
+
+        .giant-footer-name { font-size: 13.5vw; font-weight: 700; color: #fff; letter-spacing: -0.5vw; line-height: 1; margin-top: 250px; margin-bottom: 40px; width: 100%; text-align: center; text-transform: lowercase; user-select: none; }
+        .footer-nav-links { font-size: 0.9rem; font-weight: 400; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; padding-bottom: 40px; }
+        .footer-nav-links a { color: #fff; text-decoration: none; transition: 0.3s; margin: 0 10px; }
+        .footer-nav-links a:hover { opacity: 0.6; }
+
+        /* --- CAROUSEL --- */
+    
+
+
+        .carousel-container { 
+            overflow: hidden; 
+            margin: 40px 0 80px 0; 
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 20px 0;
+        }
+        .carousel-track { 
+            display: flex; 
+            width: max-content;
+            gap: 30px; 
+            animation: scroll 40s linear infinite; 
+            padding: 0 12%;
+        }
+        .carousel-item { 
+            padding: 15px 30px; 
+            background: #000; 
+            color: #fff; 
+            border-radius: 100px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            white-space: nowrap; 
+            transition: 0.3s; 
+        }
+        .carousel-item:hover { 
+            background: #333; 
+            transform: scale(1.15);
+            padding: 15px 40px;
+        }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-50% - 15px)); } }
+
+        @media (max-width: 900px) { 
+            .social-row, .social-row.reverse, .who-grid-layout, .modern-creative-grid { display: flex; flex-direction: column; }
+            .grid-item.text-block { font-size: 2rem; }
+            .giant-footer-name { font-size: 16vw; margin-top: 150px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <a href="#who">me</a>
+        <a href="#what">my socials</a>
+        <a href="#contact">contact</a>
+    </nav>
+
+    <div class="hero-layer" id="hero">
+        <h1 class="name-header">erinmerylstudy</h1>
+        <div class="thumbnail-container"><img src="profile.png" alt="Portrait"></div>
+    </div>
+    
+    <div class="intro-wrapper">
+        <div class="intro-sticky"><h2 class="who-text" id="who-zoom">who?</h2></div>
+    </div>
+
+    <div class="video-space" id="video-section">
+        <div class="floating-video" style="top:10%; left:25%; width:200px;"><video autoplay muted loop src="movie1.mp4"></video></div>
+        <div class="floating-video" style="top:25%; left:45%; width:180px;"><video autoplay muted loop src="movie2.mp4"></video></div>
+        <div class="floating-video" style="top:40%; left:20%; width:210px;"><video autoplay muted loop src="movie3.mp4"></video></div>
+        <div class="floating-video" style="top:15%; right:20%; width:190px;"><video autoplay muted loop src="movie4.mp4"></video></div>
+        <div class="floating-video" style="top:55%; left:40%; width:220px;"><video autoplay muted loop src="movie5.mp4"></video></div>
+    </div>
+
+    <main class="section-white" id="who">
+        <div class="content-container">
+            <p class="who-am-i-label">who am i?</p>
+
+            <div class="carousel-container">
+                <div class="carousel-track">
+                    <a href="https://instagram.com/erinmerylstudy" class="carousel-item">Instagram</a>
+                    <a href="https://tiktok.com/@erinmerylstudy" class="carousel-item">TikTok</a>
+                    <a href="https://youtube.com/@erinmerylstudy" class="carousel-item">YouTube</a>
+                    <a href="https://linkedin.com/in/erin-mcgurk" class="carousel-item">LinkedIn</a>
+                    <a href="https://substack.com/@erinmerylstudy" class="carousel-item">Substack</a>
+                    <a href="mailto:hello@erinmeryl.com" class="carousel-item">Email</a>
+                    <a href="https://instagram.com/erinmerylstudy" class="carousel-item">Instagram</a>
+                    <a href="https://tiktok.com/@erinmerylstudy" class="carousel-item">TikTok</a>
+                    <a href="https://youtube.com/@erinmerylstudy" class="carousel-item">YouTube</a>
+                    <a href="https://linkedin.com/in/erin-mcgurk" class="carousel-item">LinkedIn</a>
+                    <a href="https://substack.com/@erinmerylstudy" class="carousel-item">Substack</a>
+                    <a href="mailto:hello@erinmeryl.com" class="carousel-item">Email</a>
+                    <a href="https://instagram.com/erinmerylstudy" class="carousel-item">Instagram</a>
+                    <a href="https://tiktok.com/@erinmerylstudy" class="carousel-item">TikTok</a>
+                    <a href="https://youtube.com/@erinmerylstudy" class="carousel-item">YouTube</a>
+                    <a href="https://linkedin.com/in/erin-mcgurk" class="carousel-item">LinkedIn</a>
+                    <a href="https://substack.com/@erinmerylstudy" class="carousel-item">Substack</a>
+                    <a href="mailto:hello@erinmeryl.com" class="carousel-item">Email</a>
+                </div>
+            </div>
+
+            <div class="morph-container">
+                <h2 class="who-main-name name-real" id="name-real">i’m erin mcgurk</h2>
+                <h2 class="who-main-name name-study" id="name-study">i'm erinmerylstudy</h2>
+            </div>
+
+            <div class="who-grid-layout">
+                <div class="stack-area">
+                    <button class="arrow-btn" id="prev-btn">←</button>
+                    <div class="stack-container" id="project-stack">
+                        <div class="project-card"><h4>STUDENT</h4><h3>second year undergraduate</h3><p style="color: #fff;">I study land economy at the university of cambridge, and my research interest lies in space governance.</p></div>
+                        <div class="project-card"><h4>CREATOR</h4><h3>sharing study tips</h3><p style="color: #fff;">I cover everything from improving your focus to taking more effective notes.</p></div>
+                        <div class="project-card"><h4>STUDENT</h4><h3>neuroscience</h3><p style="color: #fff;">at the heart of my content is sharing the neuroscience behind how your brain really works.</p></div>
+                        <div class="project-card"><h4>CREATOR</h4><h3>personal curriculum</h3><p style="color: #fff;">I might study land economy, but that doesn't mean it's the only thing I'm learning; through my content, I show people how to build a personal curriculum.</p></div>
+                        <div class="project-card"><h4>STUDENT</h4><h3>student lifestyle</h3><p style="color: #fff;">being an undergraduate at cambridge is so much fun, and I love to share what I'm up to!</p></div>
+                        <div class="project-card"><h4>CREATOR</h4><h3>helping students</h3><p style="color: #fff;">I don't just film videos, I'm building up a community of ambitious students, and creating tools to help them succeed.</p></div>
+                    </div>
+                    <button class="arrow-btn" id="next-btn">→</button>
+                </div>
+                <div>
+                    <p class="description-text">I love to learn, and my content is built around helping others find their own enjoyment in the pursuit of knowledge!</p>
+                </div>
+            </div>
+
+            <h2 style="font-size: 5vw; margin-top: 80px; text-align: center;">an academic content creator</h2>
+
+            <div class="modern-creative-grid">
+                <div class="grid-item text-block gi-1">
+                    <img src="studysesh.jpg" alt="Logo" class="gi-1-logo" style="width: 50%; height: auto; align-self: center;">
+                    <h4 style="align-self: center;">studysesh</h4>
+                    <p style="font-size: 0.8vw; font-weight: 400; text-align: center;">I'm currently working, with my <a href="#" style="color: #000; font-style: italic;">cofounder</a> on an edtech platform designed to help students get more done with improved focus.</p>
+                    <a href="studysesh.xyz" class="substack-pill" style="align-self: center">take a look</a>
+                </div>
+                <div class="grid-item gi-2"><img src="kings.jpeg" alt="Detail"></div>
+                
+                <div class="grid-item text-block gi-3 grid-substack">
+                    <h4>read my thoughts</h4>
+                    <p style="font-size: 0.8vw; font-weight: 400;">while the majority of my content takes the form of short-form videos, I often take inspiration to write longer-form pieces for my substack.</p>
+                    <p style="font-size: 0.8vw; font-weight: 400;">I write about everything from thought pieces on topics that interest me to 'journal entries' about my life as a student at Cambridge.</p>
+                    <a href="#" class="substack-pill">here</a>
+                </div>
+
+                <div class="grid-item gi-4"><img src="college.jpeg" alt="Wide Study"></div>
+            </div>
+
+            <h2 class="section-title" id="what">what do i do?</h2>
+
+            <div class="social-row">
+                <div class="social-image-box"><img src="instagram.PNG" alt="Instagram"></div>
+                <div class="social-info">
+                    <h2>INSTAGRAM</h2>
+                    <div class="stats-flex">
+                        <div class="stat-item"><b>150k</b><span>Followers</span></div>
+                        <div class="stat-item"><b>11m</b><span>Monthly Views</span></div>
+                    </div>
+                    <p class="social-text">I began posting on Instagram in May 2025, and it quickly became my favourite social platform.</p>
+                    <p class="social-text-2">I post a mix of reels and static carousels, focused on the neuroscience of studying, focus, and motivation.</p>
+                    <p class="social-text-2">My stories share a bit more of an insight into my lifestyle as a student and content creator.</p>
+                </div>
+            </div>
+
+            <div class="social-row reverse">
+                <div class="social-info" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                    <h2>TIKTOK</h2>
+                    <div class="stats-flex">
+                        <div class="stat-item"><b>200k</b><span>Followers</span></div>
+                        <div class="stat-item"><b>9m</b><span>Monthly Views</span></div>
+                    </div>
+                    <p class="social-text" style="text-align: right;">My content on TikTok, which is the first social media I began to post on, focuses on study tips and student life.</p>
+                    <p class="social-text-2" style="text-align: right;">I have a younger audience on TikTok, with most followers being aged 14-20.</p>
+                    <p class="social-text-2" style="text-align: right;">Something that is really important to me on my TikTok is to share opportunities and advice with my audience.</p>
+                </div>
+                <div class="social-image-box"><img src="tiktok.PNG" alt="TikTok"></div>
+            </div>
+
+            <div class="social-row">
+                <div class="social-image-box"><img src="youtube.jpg" alt="YouTube"></div>
+                <div class="social-info">
+                    <h2>YOUTUBE</h2>
+                    <div class="stats-flex">
+                        <div class="stat-item"><b>14k</b><span>Followers</span></div>
+                        <div class="stat-item"><b>100k</b><span>Monthly Views</span></div>
+                    </div>
+                    <p class="social-text">After a small break, I am back on YouTube, posting longer form academic discussions and insights into how your brain really works.</p>
+                    <p class="social-text-2">With the occasional lifestyle vlog, I often make YouTube videos that provide more insight into topics that I've explored on my Instagram page.</p>
+                </div>
+            </div>
+
+            <div class="social-row reverse">
+                <div class="social-info" style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                    <h2>LINKEDIN</h2>
+                    <div class="stats-flex">
+                        <div class="stat-item"><b>6k</b><span>Followers</span></div>
+                        <div class="stat-item"><b>200k</b><span>Monthly Views</span></div>
+                    </div>
+                    <p class="social-text" style="text-align: right;">LinkedIn is (surprisingly) now one of my favourite platforms to post on!</p>
+                    <p class="social-text-2" style="text-align: right;">I share insights on the creator economy and marketing, especially through my marketing company page, em²</p>
+                </div>
+                <div class="social-image-box"><img src="linkedin.jpg" alt="LinkedIn"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="contact-reveal-wrap" id="contact">
+        <div class="contact-fixed-footer">
+            <h3 class="reveal-item" style="font-size: 6vw; font-weight: 700; color: white;">let's talk.</h3>
+            <div class="reveal-item" style="margin-top: 40px; margin-bottom: 50px;">
+                <a href="mailto:hello@erinmeryl.com" style="padding: 24px 70px; background: #fff; color: #000; border-radius: 100px; text-decoration: none; font-weight: 700; font-size: 1.3rem;">Get In Touch</a>
+            </div>
+            
+            <div class="giant-footer-name reveal-item">erinmerylstudy</div>
+            
+            <div class="footer-nav-links reveal-item">
+                <a href="https://instagram.com/erinmerylstudy">Instagram</a> | <a href="https://tiktok.com/@erinmerylstudy">TikTok</a> | <a href="https://youtube.com/@erinmerylstudy">YouTube</a> | <a href="https://linkedin.com/in/erin-mcgurk">LinkedIn</a> | <a href="https://substack.com/@erinmerylstudy">Substack</a> | <a href="mailto:hello@erinmeryl.com">Email</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const whoZ = document.getElementById('who-zoom');
+        const hero = document.getElementById('hero');
+        const navbar = document.getElementById('navbar');
+        const nameReal = document.getElementById('name-real');
+        const nameStudy = document.getElementById('name-study');
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const vh = window.innerHeight;
+            hero.style.opacity = 1 - Math.min(scrollY / (vh * 0.4), 1);
+            
+            if (scrollY <= vh) {
+                let p = scrollY / vh;
+                whoZ.style.opacity = p;
+                whoZ.style.transform = `rotateX(${-90 + (90 * p)}deg)`;
+                navbar.classList.remove('visible');
+            } else if (scrollY <= vh * 2) {
+                let p = (scrollY - vh) / vh;
+                whoZ.style.transform = `rotateX(0deg) scale(${1 + (p * 18)})`;
+                whoZ.style.opacity = 1 - (p * 1.5);
+                if (p > 0.4) navbar.classList.add('visible');
+            }
+
+            const morphRect = document.querySelector('.morph-container').getBoundingClientRect();
+            if (morphRect.top < vh * 0.5) {
+                nameReal.style.opacity = "0"; nameReal.style.transform = "translateY(-20px)";
+                nameStudy.style.opacity = "1"; nameStudy.style.transform = "translateY(0px)";
+            } else {
+                nameReal.style.opacity = "1"; nameReal.style.transform = "translateY(0px)";
+                nameStudy.style.opacity = "0"; nameStudy.style.transform = "translateY(20px)";
+            }
+        });
+
+        // Stack Logic
+        const stack = document.getElementById('project-stack');
+        const cards = Array.from(stack.children);
+        let currentIndex = 0;
+        function updateStack() {
+            cards.forEach((card, i) => {
+                let diff = (i - currentIndex + cards.length) % cards.length;
+                if (diff === 0) {
+                    card.style.transform = `translateY(0) scale(1)`; card.style.zIndex = 20; card.style.opacity = 1; card.classList.add('active');
+                } else {
+                    card.style.transform = `translateY(${diff * 12}px) translateX(${diff * 12}px) scale(${1 - diff * 0.05})`;
+                    card.style.zIndex = 20 - diff; card.style.opacity = diff > 2 ? 0 : 0.6; card.classList.remove('active');
+                }
+            });
+        }
+        document.getElementById('next-btn').addEventListener('click', () => { currentIndex = (currentIndex + 1) % cards.length; updateStack(); });
+        document.getElementById('prev-btn').addEventListener('click', () => { currentIndex = (currentIndex - 1 + cards.length) % cards.length; updateStack(); });
+        stack.addEventListener('click', () => { currentIndex = (currentIndex + 1) % cards.length; updateStack(); });
+        updateStack();
+
+        // Reveal observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('popped'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal-item').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
