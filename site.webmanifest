@@ -1,0 +1,20 @@
+{
+  "name": "erinmerylstudy",
+  "short_name": "erinmerylstudy",
+  "description": "Making learning as addictive as social media",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#f60030",
+  "background_color": "#fff3d9",
+  "display": "standalone"
+}
