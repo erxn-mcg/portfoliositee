@@ -9,1259 +9,885 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init rs ls bi ns us ts ss capture calculateEventProperties vs register register_once register_for_session unregister unregister_for_session gs getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty fs ds createPersonProfile ps Qr opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing hs debug O cs getPageViewId captureTraceFeedback captureTraceMetric Kr".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init('phc_AZcIuPR00Zq7cNDXSGhxF7oZc9PsBhwDbAQYNjQO26k', {
-        api_host: 'https://eu.i.posthog.com',
-        defaults: '2025-11-30',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-    })
+    posthog.init('phc_AZcIuPR00Zq7cNDXSGhxF7oZc9PsBhwDbAQYNjQO26k',{api_host:'https://eu.i.posthog.com',defaults:'2025-11-30',person_profiles:'identified_only'})
   </script>
   <style>
-    .font-serif { font-family: 'Playfair Display', serif; }
-    .font-sans { font-family: 'Inter', sans-serif; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    .animate-fadeIn { animation: fadeIn 0.6s ease-out; }
-    .animate-float { animation: float 6s ease-in-out infinite; }
-    html { scroll-behavior: smooth; }
+    *{-webkit-font-smoothing:antialiased}
+    .font-serif{font-family:'Playfair Display',serif}
+    .font-sans{font-family:'Inter',sans-serif}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .animate-fadeIn{animation:fadeIn .45s ease-out}
+    .animate-float{animation:float 5s ease-in-out infinite}
+    .animate-marquee{animation:marquee 30s linear infinite}
+    html{scroll-behavior:smooth}
+    ::selection{background:#f60030;color:#fff}
+    .dropdown-enter{animation:fadeIn .2s ease-out}
   </style>
 </head>
-<body class="font-sans">
+<body class="font-sans bg-white text-[#1a1a1a]">
   <div id="root"></div>
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // ============================================
-    // ERINMERYLSTUDY V2 - CENTERED, SPACIOUS, PERSONAL
-    // ============================================
+    const RED   = '#f60030';
+    const DARK  = '#3b0918';
+    const BEIGE = '#fff3d9';
 
-    // Scroll Reveal
-    const ScrollReveal = ({ children, className = '', delay = 0 }) => {
+    // ── Scroll Reveal ──────────────────────────────────────────
+    const SR = ({ children, delay = 0, className = '' }) => {
       const ref = useRef(null);
-      const [isVisible, setIsVisible] = useState(false);
+      const [v, setV] = useState(false);
       useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setTimeout(() => setIsVisible(true), delay); }, { threshold: 0.1 });
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
+        const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) setTimeout(() => setV(true), delay); }, { threshold: 0.06 });
+        if (ref.current) o.observe(ref.current);
+        return () => o.disconnect();
       }, [delay]);
-      return <div ref={ref} className={`transform transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}>{children}</div>;
+      return <div ref={ref} className={`transition-all duration-700 ease-out ${v ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'} ${className}`}>{children}</div>;
     };
 
-    // Animated Counter
-    const AnimatedCounter = ({ end, suffix = '' }) => {
-      const [count, setCount] = useState(0);
+    // ── Animated Counter ───────────────────────────────────────
+    const Count = ({ end, suffix = '' }) => {
+      const [n, setN] = useState(0);
       const ref = useRef(null);
-      const [isVisible, setIsVisible] = useState(false);
+      const [v, setV] = useState(false);
       useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setIsVisible(true); }, { threshold: 0.1 });
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
+        const o = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.1 });
+        if (ref.current) o.observe(ref.current);
+        return () => o.disconnect();
       }, []);
       useEffect(() => {
-        if (!isVisible) return;
-        let start = 0;
-        const timer = setInterval(() => { start += Math.ceil(end / 50); if (start >= end) { setCount(end); clearInterval(timer); } else { setCount(start); } }, 30);
-        return () => clearInterval(timer);
-      }, [isVisible, end]);
-      return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
+        if (!v) return;
+        let s = 0;
+        const t = setInterval(() => { s += Math.ceil(end / 50); if (s >= end) { setN(end); clearInterval(t); } else setN(s); }, 28);
+        return () => clearInterval(t);
+      }, [v, end]);
+      return <span ref={ref}>{n.toLocaleString()}{suffix}</span>;
     };
 
-    // ============================================
-    // MAIN SITE NAVIGATION (not EM2)
-    // ============================================
-    const MainNavigation = ({ currentPage, setCurrentPage }) => {
-      const [isMenuOpen, setIsMenuOpen] = useState(false);
-      const [isScrolled, setIsScrolled] = useState(false);
+    // ── Navigation ─────────────────────────────────────────────
+    const Nav = ({ page, go }) => {
+      const [open, setOpen] = useState(false);
+      const [about, setAbout] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
+      const aboutRef = useRef(null);
+
       useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        const s = () => setScrolled(window.scrollY > 30);
+        window.addEventListener('scroll', s);
+        return () => window.removeEventListener('scroll', s);
       }, []);
 
-      const navItems = [
-        { id: 'home', label: 'Home' },
-        { id: 'about', label: 'About' },
-        { id: 'mission', label: 'Mission & Impact' },
-        { id: 'students', label: 'For Students' },
-      //  { id: 'projects', label: 'Work' },
-        { id: 'media', label: 'Media Kit' },
-        { id: 'contact', label: 'Contact' },
-      ];
+      useEffect(() => {
+        const handler = (e) => { if (aboutRef.current && !aboutRef.current.contains(e.target)) setAbout(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+      }, []);
+
+      const navGo = (p) => { go(p); setOpen(false); setAbout(false); };
+
+      const linkCls = (id) =>
+        `text-xs uppercase tracking-widest transition-colors duration-200 ${page === id ? 'text-[#f60030]' : 'text-[#1a1a1a]/50 hover:text-[#1a1a1a]'}`;
 
       return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-[#fff3d9]/95 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
-          <div className="max-w-6xl mx-auto px-8 py-5">
-            <div className="flex items-center justify-between">
-              <button onClick={() => setCurrentPage('home')} className="font-serif text-xl font-medium text-[#3b0918] hover:text-[#f60030] transition-colors">
-                erinmerylstudy
-              </button>
-              <div className="hidden lg:flex items-center gap-8">
-                {navItems.map((item) => (
-                  <button key={item.id} onClick={() => setCurrentPage(item.id)} className={`text-sm transition-all duration-300 ${currentPage === item.id ? 'text-[#f60030]' : 'text-[#3b0918]/70 hover:text-[#f60030]'}`}>
-                    {item.label}
-                  </button>
-                ))}
-                <button onClick={() => setCurrentPage('em2')} className="ml-4 px-5 py-2 bg-[#3b0918] text-[#fff3d9] rounded-full text-sm hover:bg-[#f60030] transition-colors">
-                  em² marketing →
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
+          <div className="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
+
+            {/* Logo */}
+            <button onClick={() => navGo('home')} className="font-serif text-lg font-medium text-[#3b0918] hover:text-[#f60030] transition-colors">
+              erinmerylstudy
+            </button>
+
+            {/* Desktop links */}
+            <div className="hidden md:flex items-center gap-10">
+
+              {/* About Erin dropdown */}
+              <div ref={aboutRef} className="relative">
+                <button
+                  onClick={() => setAbout(!about)}
+                  onMouseEnter={() => setAbout(true)}
+                  className={`${linkCls('about')} flex items-center gap-1`}
+                >
+                  About Erin
+                  <svg className={`w-3 h-3 transition-transform ${about ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-              </div>
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden text-[#3b0918] text-2xl">{isMenuOpen ? '✕' : '☰'}</button>
-            </div>
-            {isMenuOpen && (
-              <div className="lg:hidden absolute top-full left-0 right-0 bg-[#fff3d9] shadow-lg py-6 animate-fadeIn">
-                {navItems.map((item) => (
-                  <button key={item.id} onClick={() => { setCurrentPage(item.id); setIsMenuOpen(false); }} className={`block w-full text-center py-3 ${currentPage === item.id ? 'text-[#f60030]' : 'text-[#3b0918]'}`}>{item.label}</button>
-                ))}
-                <button onClick={() => { setCurrentPage('em2'); setIsMenuOpen(false); }} className="block w-full text-center py-3 text-[#f60030] font-medium">EM2 Consultancy →</button>
-              </div>
-            )}
-          </div>
-        </nav>
-      );
-    };
-
-    // ============================================
-    // HOME PAGE - CENTERED & SPACIOUS
-    // ============================================
-    const HomePage = ({ setCurrentPage }) => (
-      <div className="min-h-screen bg-[#fff3d9]">
-        {/* Hero */}
-        <section className="min-h-screen flex items-center justify-center px-8 pt-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.3em] text-sm mb-8">erinmerylstudy</p>
-            </ScrollReveal>
-            <ScrollReveal delay={200}>
-              <h1 className="font-serif text-5xl md:text-7xl font-medium text-[#3b0918] mb-8 leading-[1.1]">
-                Making learning as<br />
-                <span className="italic text-[#f60030]">addictive</span> as social media
-              </h1>
-            </ScrollReveal>
-            <ScrollReveal delay={400}>
-              <p className="text-xl text-[#5a5a5a] max-w-2xl mx-auto mb-12 leading-relaxed">
-                I help students fall in love with learning through content that inspires
-              </p>
-            </ScrollReveal>
-            <ScrollReveal delay={600}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onClick={() => setCurrentPage('students')} className="px-8 py-4 bg-[#f60030] text-white rounded-full hover:bg-[#3b0918] transition-all duration-300">
-                  I'm a Student
-                </button>
-                <button onClick={() => setCurrentPage('mission')} className="px-8 py-4 border-2 border-[#3b0918] text-[#3b0918] rounded-full hover:bg-[#3b0918] hover:text-[#fff3d9] transition-all duration-300">
-                  I'm an Organisation
-                </button>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Scroll indicator */}
-        <div className="text-center pb-20">
-          <div className="animate-float inline-block text-[#3b0918]/30 text-3xl">↓</div>
-        </div>
-
-        {/* Impact Numbers */}
-        <section className="py-32 px-8">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                {[
-                  { value: 400, suffix: 'K+', label: 'Engaged Followers' },
-                  { value: 100, suffix: 'M+', label: 'Lives Touched' },
-                  { value: 30, suffix: '+', label: 'Brand Collaborations' },
-                  { value: 15, suffix: '+', label: 'Speaking Events' },
-                ].map((stat, i) => (
-                  <div key={i}>
-                    <div className="text-4xl md:text-5xl font-serif text-[#f60030] mb-2">
-                      <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-                    </div>
-                    <div className="text-sm text-[#5a5a5a] tracking-wide">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* What I Do */}
-        <section className="py-32 px-8 bg-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">What I Do</p>
-              <h2 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8">
-                Content. Community. Consulting.
-              </h2>
-              <p className="text-lg text-[#5a5a5a] max-w-2xl mx-auto mb-16 leading-relaxed">
-                I create study content, build community, and help organisations connect authentically with students.
-              </p>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { icon: '✨', title: 'Create', desc: 'Sharing the neuroscience of learning, study tips, my student life at Cambridge, and more', link: 'projects' },
-                { icon: '🤝', title: 'Connect', desc: 'Building a community of motivated and ambitious learners from around the world', link: 'students' },
-                { icon: '📈', title: 'Consult', desc: 'Helping non-profit organisations and brands speak to the student generation', link: 'em2' },
-              ].map((item, i) => (
-                <ScrollReveal key={i} delay={i * 150}>
-                  <button onClick={() => setCurrentPage(item.link)} className="group block w-full p-10 bg-[#fff3d9] rounded-3xl hover:shadow-xl transition-all duration-500 text-center">
-                    <div className="text-5xl mb-6">{item.icon}</div>
-                    <h3 className="font-serif text-2xl text-[#3b0918] mb-4">{item.title}</h3>
-                    <p className="text-[#5a5a5a] leading-relaxed">{item.desc}</p>
-                  </button>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Quote/Mission Teaser */}
-        <section className="py-40 px-8 bg-[#3b0918] text-center">
-          <div className="max-w-3xl mx-auto">
-            <ScrollReveal>
-              <p className="font-serif text-3xl md:text-4xl text-[#fff3d9] leading-relaxed italic mb-8">
-                "What we learn shapes who we are. I create content that inspires and empowers students to take control of their learning."
-              </p>
-              <button onClick={() => setCurrentPage('mission')} className="text-[#f60030] hover:text-white transition-colors">
-                Read my story →
-              </button>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* As Seen In */}
-        <section className="py-24 px-8">
-          <div className="max-w-5xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#5a5a5a]/50 uppercase tracking-[0.2em] text-xs mb-12">As Featured In</p>
-              <div className="flex flex-wrap justify-center items-center gap-16 opacity-40">
-                {['ITV', 'The Heard', 'BBC Manchester'].map((brand, i) => (
-                  <span key={i} className="text-xl font-serif text-[#3b0918]">{brand}</span>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-      </div>
-    );
-
-    // ============================================
-    // ABOUT PAGE - PERSONAL & CENTERED
-    // ============================================
-    const AboutPage = () => (
-      <div className="min-h-screen bg-[#fff3d9] pt-32">
-        <section className="py-20 px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">About Me</p>
-              <h1 className="font-serif text-4xl md:text-6xl text-[#3b0918] mb-12">
-                Hi, I'm Erin Meryl McGurk
-              </h1>
-            </ScrollReveal>
-
-            <ScrollReveal delay={200}>
-              <div className="w-64 h-64 mx-auto rounded-full bg-gradient-to-br from-[#f60030]/20 to-[#3b0918]/20 mb-12 flex items-center justify-center">
-                <span className="text-[#5a5a5a]">
-                  <img src="profile.png" alt="Erin Meryl McGurk" className="object-cover rounded-full w-full h-full" />
-                </span>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delay={400}>
-              <div className="space-y-10 text-lg leading-relaxed">
-                <p className="md:text-center text-center">
-                  <span className="text-[#f60030] font-serif font-semibold">I am a second year student at St John's College, at the University of Cambridge.</span> I study Land Economy, which is a niche Cambridge course that combines elements of law, economics, and public policy.
-                </p>
-                <p className="md:text-center text-center">
-                  <span className="text-[#f60030] font-serif font-semibold">I began creating content on TikTok in August 2024,</span> initially sharing tips about university applications and general study tips. My page grew quickly, and I began asking people what they wanted me to create next. This feedback loop is what still drives my content creation today.
-                </p>
-                <p className="md:text-left text-center border-l-4 border-r-4 border-[#f60030] pl-6">
-                  <span className="italic text-[#f60030] font-serif font-semibold">The turning point for me came when I received a message from a student</span> who said my videos had helped them fall back in love with studying. It was in that moment that I realised the impact I could have, and I decided to pursue content creation more seriously.
-                </p>
-                <p className="md:text-center text-center">
-                  <span className="text-[#f60030] font-serif font-semibold">Now, I get messages like this every single day.</span>
-                </p>
-                <p className="md:text-center text-center">
-                  <span className="text-[#f60030] font-serif font-semibold">It's a constant reminder of why I do what I do.</span> I want to create content that teaches people how to use their brain to learn, to study, and, most importantly, to stay curious about the world around them.
-                </p>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Values */}
-        <section className="py-32 px-8 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6 text-center">My Journey</p>
-              <h2 className="font-serif text-4xl text-[#3b0918] mb-16 text-center">A Bit More About My Experience</h2>
-            </ScrollReveal>
-            <div className="relative border-l-4 border-[#f60030]/20 pl-8 space-y-16">
-              {[
-                {
-                  year: "August 2024–Present",
-                  title: "Content Creator & Study Coach",
-                  org: "erinmerylstudy",
-                  desc: "Grew a community of 400K+ students, sharing neuroscience-backed study strategies and motivational content across platforms.",
-                },
-                {
-                  year: "October 2024–Present",
-                  title: "Undergraduate Student",
-                  org: "St John's College, University of Cambridge",
-                  desc: "Studying Land Economy. I co-run the French Rock Society, and am involved in college and university outreach.",
-                },
-                {
-                  year: "December 2025-Present",
-                  title: "Grantee",
-                  org: "Cosmos Institute",
-                  desc: "I'm supported by the Cosmos Institute to build a platform designed to teach more effective and more responsible AI use to students.",
-                },
-                {
-                  year: "2025-Present",
-                  title: "Marketing Consultant",
-                  org: "em2",
-                  desc: "I work with organisations to help them connect authentically with student audiences through content and campaigns.",
-                },
-                // Add more experiences as needed
-              ].map((item, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="relative pb-8 group">
-                    {/* Timeline Dot */}
-                    <div className="absolute -left-8 top-2 w-5 h-5 rounded-full bg-[#f60030] border-4 border-white shadow-md group-hover:scale-110 transition-transform"></div>
-                    <div className="bg-[#fff3d9] p-8 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                        <span className="text-[#f60030] font-serif font-semibold text-sm">{item.year}</span>
-                        <span className="text-[#3b0918] font-serif text-lg font-semibold">{item.title}</span>
-                      </div>
-                      <div className="text-[#5a5a5a] font-medium mb-2">{item.org}</div>
-                      <div className="text-[#5a5a5a]">{item.desc}</div>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Fun Facts */}
-        <section className="py-32 px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Get To Know Me</p>
-              <h2 className="font-serif text-4xl text-[#3b0918] mb-16">Beyond the Content</h2>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  fact: 'I am training to run a 100km race in the Chilterns in May!',
-                  img: 'run.jpg'
-                },
-                {
-                  fact: 'My week is not complete without going for brunch at least once (coupled with a chai latte!)',
-                  img: 'brunch.jpeg'
-                },
-                {
-                  fact: 'My research focuses on Space Governance, especially the alignment of satellite-based AI systems',
-                  img: 'library.jpeg'
-                },
-                {
-                  fact: 'I am trying to go for a formal dinner at every college in Cambridge before I graduate. Progress: 7/31',
-                  img: 'formal.jpeg'
-                },
-              ].map((item, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="p-8 bg-white rounded-2xl text-left">
-                    <div className="w-full aspect-[15/10] mb-4 overflow-hidden rounded-xl bg-[#f6e8d9] flex items-center justify-center">
-                      <img
-                        src={item.img}
-                        alt=""
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                    <p className="text-[#5a5a5a]">{item.fact}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Timeline */}
-        
-      </div>
-    );
-
-    // ============================================
-    // MISSION & IMPACT PAGE - FOR SPEAKING/NON-PROFIT
-    // ============================================
-    const MissionPage = ({ setCurrentPage }) => (
-      <div className="min-h-screen bg-[#fff3d9] pt-32">
-        {/* Hero */}
-        <section className="py-20 px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Mission & Impact</p>
-              <h1 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8 leading-tight">
-                Everyone is a lifelong learner
-              </h1>
-              <p className="text-xl text-[#5a5a5a] leading-relaxed">
-                I aim to do a lot with my content, from sharing study tips and neuroscience hacks to exploring the impact of AI on education. 
-              </p>
-              <p className="text-xl text-[#5a5a5a] leading-relaxed">
-                But, at the core of everything I do is a simple mission:
-              </p>
-              <p className="text-xl text-[#5a5a5a] leading-relaxed">
-                To help everyone stay curious about the world around them.
-              </p>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* The Problem */}
-        <section className="py-24 px-8 bg-white">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">The Challenge</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#3b0918] mb-8">
-                Why This Matters
-              </h2>
-              <p className="text-lg text-[#5a5a5a] leading-relaxed mb-12">
-                Learning doesn’t end at exams, but most students are taught to treat it that way. They are taught to prioritise performance over understanding, grades over curiosity, and short-term outcomes over long-term skill-building. I want to help students rediscover learning as a skill they can use for life.
-              </p>
-              <p className="text-lg text-[#5a5a5a] leading-relaxed mb-12">
-                They are taught to prioritise performance over understanding, grades over curiosity, and short-term outcomes over long-term skill-building. 
-              </p>
-              <p className="text-lg text-[#5a5a5a] leading-relaxed mb-12">
-                I want to help students rediscover learning as a skill they can use for life.
-              </p>
-            </ScrollReveal>
-
-            <ScrollReveal delay={200}>
-              <div className="grid md:grid-cols-3 gap-8 text-center">
-                {[
-                  { stat: 'Learning is Forgotten', desc: 'within weeks of assessment' },
-                  { stat: 'Curiosity Declines', desc: 'as students progress through education' },
-                  { stat: 'A Better Model', desc: 'lies in learning to satisfy curiosity and deepen understanding' },
-                ].map((item, i) => (
-                  <div key={i} className="p-6">
-                    <div className="text-3xl font-serif text-[#f60030] mb-3">{item.stat}</div>
-                    <p className="text-sm text-[#5a5a5a]">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* The Vision */}
-        <section className="py-32 px-8 bg-[#3b0918]">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">The Vision</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#fff3d9] mb-8">
-                What I'm Working Toward
-              </h2>
-              <p className="text-lg text-[#fff3d9]/80 leading-relaxed">
-                I want more people to discover the kind of learning I wish I'd been exposed to earlier: learning that doesn't stop with an exam. This is learning that is driven by curiosity and a desire to understand the world more deeply.
-              </p>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Impact Areas */}
-        <section className="py-32 px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Areas of Impact</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#3b0918] mb-16">
-                How I Create Change
-              </h2>
-            </ScrollReveal>
-
-            <div className="space-y-12">
-              {[
-                { icon: '🎤', title: 'Speaking & Workshops', desc: 'I speak to students in schools, universities, and at education events about learning, neuroscience, and academic pressure. I focus on helping students feel more confident in their ability to learn, rather than telling them to “work harder” or push through burnout.' },
-                { icon: '🤝', title: 'Non-Profit Partnerships', desc: 'I work with non-profits that care about increasing access to education and improving student wellbeing. In particular, I work to build partnerships and campaigns that help organisations reach young people more effectively.' },
-                { icon: '🌍', title: 'Accessible Education', desc: 'I try to make my resources available to as many people as possible through free content, partnerships, and initiatives that promote equitable access to learning.' },
-                { icon: '💡', title: 'Thought Leadership', desc: 'My focus is on how we teach learning itself. I contribute to conversations around education by exploring how students learn, and how curiosity is shaped by the academic systems we work within.' },
-              ].map((area, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="bg-white p-10 rounded-3xl text-center">
-                    <div className="text-5xl mb-6">{area.icon}</div>
-                    <h3 className="font-serif text-2xl text-[#3b0918] mb-4">{area.title}</h3>
-                    <p className="text-[#5a5a5a] leading-relaxed max-w-xl mx-auto">{area.desc}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Speaking Topics */}
-        <section className="py-32 px-8 bg-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Speaking</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#3b0918] mb-8">
-                Topics I Speak On
-              </h2>
-              <p className="text-lg text-[#5a5a5a] mb-16 max-w-2xl mx-auto">
-                I speak at schools, universities, and education events about learning and engagement :)
-              </p>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-2 gap-6 text-left">
-              {[
-                {
-                  header: "Attention in a Digitally Noisy World",
-                  desc: "How constant information exposure affects focus, and how students can still learn effectively within that reality."
-               },
-                {
-                  header: "Building a Personal Brand as a Student",
-                  desc: "Sharing the lessons I've learned from growing a values-driven platform and how students can use their voice to create impact."
-                },
-               {
-                  header: "Student Wellbeing",
-                    desc: "Exploring the pressures students face and practical strategies for supporting learning and wellbeing."
-               },
-                {
-                  header: "Marketing To Students (And Why It Fails)",
-                  desc: "How students actually respond to messaging and campaigns, based on behaviour not assumptions."
-               },
-              ].map((topic, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="p-6 bg-[#fff3d9] rounded-xl">
-                    <h4 className="font-serif text-lg text-[#3b0918] mb-2">{topic.header}</h4>
-                    <p className="text-[#5a5a5a]">{topic.desc}</p>
-                 </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-32 px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#3b0918] mb-8">
-                Let's Create Impact Together
-              </h2>
-              <p className="text-lg text-[#5a5a5a] mb-12 max-w-xl mx-auto">
-                Interested in having me speak at your event, school, or organisation? Let's connect.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onClick={() => setCurrentPage('contact')} className="px-8 py-4 bg-[#f60030] text-white rounded-full hover:bg-[#3b0918] transition-colors">
-                  Get in Contact
-                </button>
-              
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-      </div>
-    );
-
-    // ============================================
-    // FOR STUDENTS PAGE
-    // ============================================
-    const StudentsPage = () => {
-      const [filter, setFilter] = useState('all');
-      const products = [
-        { id: 1, name: 'My Notion Template', price: 'Coming Soon!', cat: 'free', type: 'Notion', url: '#', image: 'notion.png' },
-        { id: 2, name: 'Learn New Things', price: 'Free', cat: 'free', type: 'Website', url: 'https://leastpath.io', image: 'leastpath.png' },
-        { id: 3, name: '1:1 Study Coaching Session', price: '£80', cat: 'paid', type: 'Coaching', url: 'https://stan.store/erinmerylstudyy/p/11-academic-coaching-with-erin', image: 'profile.png' },
-        { id: 4, name: 'The Locked In Planner', price: 'Coming Soon!', cat: 'paid', type: 'Notebook', url: '#', image: 'planner.jpg' },
-      ];
-      const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
-
-      return (
-        <div className="min-h-screen bg-[#fff3d9] pt-32">
-          <section className="py-20 px-8">
-            <div className="max-w-3xl mx-auto text-center">
-              <ScrollReveal>
-                <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">For Students</p>
-                <h1 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8">
-                  Resources to Help You Learn
-                </h1>
-                <p className="text-xl text-[#5a5a5a] leading-relaxed">
-                  These are resources I wish I’d had earlier! They’re designed to help you understand how learning works, figure out what’s actually worth your time, and make studying feel more manageable rather than overwhelming.
-                </p>
-              </ScrollReveal>
-            </div>
-          </section>
-
-          {/* Newsletter */}
-          <section className="py-16 px-8 bg-[#3b0918]">
-            <div className="max-w-2xl mx-auto text-center">
-              <ScrollReveal>
-                <h3 className="font-serif text-2xl text-[#fff3d9] mb-6">Get My Substack Newsletter</h3>
-                <p className="text-[#fff3d9]/70 mb-8">Join 5K+ students getting interesting insights, neuroscience-backed learning strategies, and study tips that actually work.</p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-                  <button className="px-6 py-3 bg-[#f60030] text-white rounded-full hover:bg-white hover:text-[#f60030] transition-colors"><a href="https://erinmerylstudy.substack.com/subscribe">Subscribe</a></button>
-                </div>
-              </ScrollReveal>
-            </div>
-          </section>
-
-          <section className="py-12 px-8 bg-[#3b0918]">
-  <div className="max-w-3xl mx-auto text-center">
-    <ScrollReveal>
-      <div className="flex flex-wrap justify-center gap-8">
-        <a href="https://instagram.com/erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">Instagram</a>
-        <a href="https://tiktok.com/@erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">TikTok</a>
-        <a href="https://youtube.com/@erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">YouTube</a>
-        <a href="https://linkedin.com/in/erin-mcgurk" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">LinkedIn</a>
-      </div>
-    </ScrollReveal>
-  </div>
-</section>
-
-          {/* Products */}
-          <section className="py-24 px-8">
-            <div className="max-w-5xl mx-auto">
-              <ScrollReveal>
-                <div className="flex justify-center gap-4 mb-16">
-                  {['all', 'free', 'paid'].map((f) => (
-                    <button key={f} onClick={() => setFilter(f)} className={`px-6 py-2 rounded-full text-sm transition-all ${filter === f ? 'bg-[#f60030] text-white' : 'bg-white text-[#3b0918] hover:bg-[#f60030]/10'}`}>
-                      {f === 'all' ? 'All' : f === 'free' ? 'Free Resources' : 'Premium'}
-                    </button>
-                  ))}
-                </div>
-              </ScrollReveal>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filtered.map((p, i) => (
-                  <ScrollReveal key={p.id} delay={i * 100}>
-                    <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-500 group">
-                      <div className="aspect-[4/3] bg-gradient-to-br from-[#f60030]/10 to-[#3b0918]/10 flex items-center justify-center overflow-hidden">
-                        {p.image ? (
-                          <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-[#5a5a5a]">[Preview]</span>
-                        )}
-                      </div>
-                      <div className="p-6 text-center">
-                        <span className="text-xs text-[#f60030] uppercase tracking-wider">{p.type}</span>
-                        <h3 className="font-serif text-lg text-[#3b0918] mt-2 mb-4">{p.name}</h3>
-                        <div className="flex items-center justify-center gap-4">
-                          <a
-  href={p.url}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="px-5 py-2 bg-[#3b0918] text-white rounded-full text-sm hover:bg-[#f60030] transition-colors inline-block"
->
-  {p.price}
-</a>
-                        </div>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Testimonials */}
-          <section className="py-24 px-8 bg-white">
-            <div className="max-w-4xl mx-auto text-center">
-              <ScrollReveal>
-                <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Feedback</p>
-                <h2 className="font-serif text-3xl text-[#3b0918] mb-16">What Students Say</h2>
-              </ScrollReveal>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {[
-                  {
-                    quote: "Thank you so much! Your videos helped me ace my A Levels and get into my dream university!",
-                    name: "Emilia",
-                    detail: "University of Oxford, Chemistry"
-                  },
-                  {
-                    quote: "I used to hate studying maths, but now I actually enjoy it!",
-                    name: "James",
-                    detail: "Dubai College, A Levels"
-                  }
-                ].map((t, i) => (
-                  <ScrollReveal key={i} delay={i * 150}>
-                    <div className="bg-[#fff3d9] p-8 rounded-2xl text-left">
-                      <p className="text-[#5a5a5a] italic mb-6 leading-relaxed">
-                        "{t.quote}"
-                      </p>
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <div className="font-medium text-[#3b0918]">{t.name}</div>
-                          <div className="text-sm text-[#5a5a5a]">{t.detail}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-      );
-    };
-
-    // ============================================
-    // PROJECTS/WORK PAGE
-    // ============================================
-   // const ProjectsPage = () => {
-   //   const [filter, setFilter] = useState('all');
-  //    const cats = ['all', 'Content', 'UGC', 'Templates', 'Collabs'];
-    //  const projects = [
-      //  { id: 1, title: '[Project Name]', cat: 'Content', metric: '1.2M views' },
-        //{ id: 2, title: '[Project Name]', cat: 'UGC', metric: '500K reach' },
-    //    { id: 3, title: '[Project Name]', cat: 'Templates', metric: '10K downloads' },
-   //     { id: 4, title: '[Project Name]', cat: 'Collabs', metric: 'Featured campaign' },
-   //     { id: 5, title: '[Project Name]', cat: 'Content', metric: '800K views' },
-   //     { id: 6, title: '[Project Name]', cat: 'UGC', metric: '2.5M impressions' },
-   //   ];
-   //   const filtered = filter === 'all' ? projects : projects.filter(p => p.cat === filter);
-
-   //   return (
-   //     <div className="min-h-screen bg-[#fff3d9] pt-32">
-    //      <section className="py-20 px-8">
-   //         <div className="max-w-3xl mx-auto text-center">
-   //           <ScrollReveal>
-  //              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">My Work</p>
-   //             <h1 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8">
-     //             Selected Projects
-    //           </h1>
-   //             <p className="text-xl text-[#5a5a5a] leading-relaxed">
-   //               [A look at some of my favorite work — from viral content to brand collaborations]
-   //             </p>
-    //          </ScrollReveal>
-   //         </div>
-   //       </section>
-//
-   //       <section className="py-8 px-8">
-   //         <div className="max-w-5xl mx-auto">
-   //           <ScrollReveal>
-   //             <div className="flex flex-wrap justify-center gap-3 mb-16">
-   //               {cats.map((c) => (
-   //                 <button key={c} onClick={() => setFilter(c)} className={`px-5 py-2 rounded-full text-sm transition-all ${filter === c ? 'bg-[#f60030] text-white' : 'bg-white text-[#3b0918]'}`}>
-   //                   {c === 'all' ? 'All Work' : c}
-   //                 </button>
-   //               ))}
-   //             </div>
-   //           </ScrollReveal>
-//
-   //           <div className="grid md:grid-cols-2 gap-10">
-   //             {filtered.map((p, i) => (
-   //               <ScrollReveal key={p.id} delay={i * 100}>
-   ///                 <div className="group cursor-pointer">
-   //                   <div className="aspect-video bg-gradient-to-br from-[#f60030]/20 to-[#3b0918]/20 rounded-2xl mb-6 overflow-hidden relative">
-   //                     <span className="absolute inset-0 flex items-center justify-center text-[#5a5a5a]">[Project Visual]</span>
-   //                     <div className="absolute inset-0 bg-[#3b0918]/90 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center text-white p-8">
-   //                       <p className="text-center mb-4">[Brief project description]</p>
-   //                       <span className="text-[#f60030]">View Details →</span>
-   //                     </div>
-   //                   </div>
-   //                   <div className="text-center">
-   //                     <span className="text-xs text-[#f60030] uppercase tracking-wider">{p.cat}</span>
-   //                     <h3 className="font-serif text-xl text-[#3b0918] mt-2">{p.title}</h3>
-   //                     <p className="text-sm text-[#5a5a5a] mt-1">{p.metric}</p>
-   //                   </div>
-   //                 </div>
-   //               </ScrollReveal>
-   //             ))}
-   //           </div>
-   //         </div>
-   //       </section>
-   //     </div>
-   //   );
-   // };
-
-    // ============================================
-    // MEDIA KIT PAGE
-    // ============================================
-    const MediaKitPage = ({ setCurrentPage }) => (
-      <div className="min-h-screen bg-[#fff3d9] pt-32">
-        <section className="py-20 px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">For Brands</p>
-              <h1 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8">Media Kit</h1>
-              <p className="text-xl text-[#5a5a5a] leading-relaxed">
-                Work with me! I help educational and lifestyle brands connect authentically with student audiences :)
-              </p>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Profile */}
-        <section className="py-16 px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl p-10 text-center">
-              <ScrollReveal>
-                <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#f60030]/20 to-[#3b0918]/20 mb-6 flex items-center justify-center overflow-hidden">
-  <img
-    src="profile.png"
-    alt="Erin Meryl McGurk"
-    className="object-cover w-full h-full rounded-full"
-  />
-</div>
-                <h2 className="font-serif text-2xl text-[#3b0918] mb-4">erinmerylstudy</h2>
-                <p className="text-[#5a5a5a] max-w-lg mx-auto leading-relaxed">
-                  I'm a second year student at the University of Cambridge, and my content focuses on study tips, neuroscience-backed learning strategies, and student wellbeing.
-                </p>
-              </ScrollReveal>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats */}
-        <section className="py-16 px-8 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-16">
-                <p className="text-5xl font-serif text-[#f60030] mb-2"><AnimatedCounter end={400} suffix="K+" /></p>
-                <p className="text-[#5a5a5a]">Total Community</p>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-5 gap-6">
-              {[
-                { platform: 'TikTok', followers: '200K', engagement: '10M' },
-                { platform: 'Instagram', followers: '180K', engagement: '12M' },
-                { platform: 'YouTube', followers: '15K', engagement: '300K' },
-                { platform: 'LinkedIn', followers: '6K', engagement: '100K' },
-                { platform: 'Substack', followers: '0.5K', engagement: '12K' },
-              ].map((p, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="text-center p-6 bg-[#fff3d9] rounded-2xl">
-                    <h4 className="font-medium text-[#3b0918] mb-3">{p.platform}</h4>
-                    <p className="text-2xl font-serif text-[#f60030]">{p.followers}</p>
-                    <p className="text-xs text-[#5a5a5a]">{p.engagement} monthly impressions</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Audience */}
-        <section className="py-24 px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">My Audience</p>
-              <h2 className="font-serif text-3xl text-[#3b0918] mb-12">Who You'll Reach</h2>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { stat: '45%', label: 'Ages 18-24' },
-                { stat: '22%', label: 'UK-based' },
-                { stat: '58%', label: 'Female' },
-              ].map((item, i) => (
-                <ScrollReveal key={i} delay={i * 100}>
-                  <div className="bg-white p-8 rounded-2xl">
-                    <p className="text-4xl font-serif text-[#f60030] mb-2">{item.stat}</p>
-                    <p className="text-[#5a5a5a]">{item.label}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Past Partners */}
-        <section className="py-24 px-8 bg-[#3b0918]">
-          <div className="max-w-5xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Some of My Previous Partners</p>
-              <div className="flex flex-wrap justify-center gap-12 opacity-60">
-                {['Samsung', 'Google Gemini', 'OpenAI', 'Prospects', 'BackMarket', 'Loop Earplugs'].map((b, i) => (
-                  <span key={i} className="text-xl font-serif text-[#fff3d9]">{b}</span>
-                ))}
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-24 px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <h2 className="font-serif text-3xl text-[#3b0918] mb-8">Let's Work Together</h2>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                
-                <button onClick={() => setCurrentPage('contact')} className="px-8 py-4 border-2 border-[#3b0918] text-[#3b0918] rounded-full hover:bg-[#3b0918] hover:text-white transition-colors">
-                  Get In Touch
-                </button>
-              </div>
-            </ScrollReveal>
-          </div>
-        </section>
-      </div>
-    );
-
-    // ============================================
-    // CONTACT PAGE
-    // ============================================
-    const ContactPage = () => {
-      const [type, setType] = useState(null);
-
-      return (
-        <div className="min-h-screen bg-[#fff3d9] pt-32">
-          <section className="py-1 px-8">
-            <div className="max-w-3xl mx-auto text-center">
-              <ScrollReveal>
-                <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Contact</p>
-                <h1 className="font-serif text-4xl md:text-5xl text-[#3b0918] mb-8">Let's Connect</h1>
-                <p className="text-xl text-[#5a5a5a]">I'd love to hear from you.</p>
-              </ScrollReveal>
-            </div>
-          </section>
-
-          {!type ? (
-            <section className="py-20 px-8">
-              <div className="max-w-3xl mx-auto">
-                <div className="grid md:grid-cols-3 gap-6">
-                  {[
-                    { t: 'student', icon: '📚', label: "I'm a Student", desc: 'Questions or just saying hi' },
-                    { t: 'brand', icon: '🤝', label: "I'm a Brand", desc: 'Partnership opportunities' },
-                    { t: 'speaking', icon: '🎤', label: 'Speaking Inquiry', desc: 'Events & conferences' },
-                  ].map((opt, i) => (
-                    <ScrollReveal key={opt.t} delay={i * 100}>
-                      <button onClick={() => setType(opt.t)} className="w-full p-8 bg-white rounded-2xl hover:shadow-lg transition-all text-center group">
-                        <div className="text-4xl mb-4">{opt.icon}</div>
-                        <h3 className="font-serif text-lg text-[#3b0918] mb-2">{opt.label}</h3>
-                        <p className="text-sm text-[#5a5a5a]">{opt.desc}</p>
+                {about && (
+                  <div onMouseLeave={() => setAbout(false)} className="dropdown-enter absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-black/5 py-1 z-50">
+                    {[['about','About'],['cv','CV'],['built',"Stuff I'm Building"]].map(([id,label]) => (
+                      <button key={id} onClick={() => navGo(id)}
+                        className="block w-full text-left px-4 py-2.5 text-sm text-[#1a1a1a]/70 hover:text-[#f60030] hover:bg-[#fff3d9] transition-colors">
+                        {label}
                       </button>
-                    </ScrollReveal>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ) : (
-            <section className="py-16 px-8">
-              <div className="max-w-xl mx-auto">
-                <button onClick={() => setType(null)} className="text-[#f60030] mb-8 hover:underline">← Back</button>
-                <ScrollReveal>
-                  <div className="bg-white rounded-3xl p-8">
-                    <h2 className="font-serif text-2xl text-[#3b0918] mb-6 text-center">
-                      {type === 'student' && "Hey there! 👋"}
-                      {type === 'brand' && "Brand Partnership"}
-                      {type === 'speaking' && "Speaking Inquiry"}
-                    </h2>
-                    {type === 'brand' ? (
-  <div className="text-center">
-    <a
-      href="mailto:evie@84world.com"
-      className="inline-block px-8 py-4 bg-[#f60030] text-white rounded-full hover:bg-[#3b0918] transition-colors text-lg font-serif font-semibold"
-    >
-      Email Brand Partnerships
-    </a>
-    <p className="mt-6 text-[#5a5a5a]">You’ll be connected directly with my management team.</p>
-  </div>
-) : (
-  <div className="text-center">
-    <a
-      href="mailto:erinmeryl@icloud.com"
-      className="inline-block px-8 py-4 bg-[#f60030] text-white rounded-full hover:bg-[#3b0918] transition-colors text-lg font-serif font-semibold"
-    >
-      Email Erin
-    </a>
-    <p className="mt-6 text-[#5a5a5a]">
-      {type === 'student' && "For student questions, advice, or just to say hi."}
-      {type === 'speaking' && "For speaking invitations, events, or collaborations."}
-    </p>
-  </div>
-)}
+                    ))}
                   </div>
-                </ScrollReveal>
+                )}
               </div>
-            </section>
-          )}
 
-          {/* Social Links */}
-          <section className="py-24 px-8 bg-[#3b0918]">
-  <div className="max-w-3xl mx-auto text-center">
-    <ScrollReveal>
-      <div className="flex flex-wrap justify-center gap-8">
-        <a href="https://instagram.com/erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">Instagram</a>
-        <a href="https://tiktok.com/@erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">TikTok</a>
-        <a href="https://youtube.com/@erinmerylstudy" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">YouTube</a>
-        <a href="https://linkedin.com/in/erin-mcgurk" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">LinkedIn</a>
-        <a href="https://erinmerylstudy.substack.com" target="_blank" rel="noopener noreferrer" className="text-2xl md:text-3xl font-serif font-bold text-[#fff3d9] hover:text-[#f60030] transition-colors">Substack</a>
-      </div>
-    </ScrollReveal>
-  </div>
-</section>
-        </div>
-      );
-    };
-
-    // ============================================
-    // EM2 CONSULTANCY - SEPARATE MICROSITE FEEL
-    // ============================================
-    const EM2Navigation = ({ setCurrentPage }) => {
-      const [isScrolled, setIsScrolled] = useState(false);
-      useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 50);
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-      }, []);
-
-      return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-[#3b0918]/95 backdrop-blur-md' : 'bg-transparent'}`}>
-          <div className="max-w-6xl mx-auto px-8 py-5">
-            <div className="flex items-center justify-between">
-              <button onClick={() => setCurrentPage('home')} className="text-[#fff3d9]/60 text-sm hover:text-[#f60030] transition-colors">
-                ← Back to erinmerylstudy
-              </button>
-              <span className="font-serif text-xl text-[#fff3d9]">em²</span>
-              <a href="mailto:erinmeryl@icloud.com?subject=em%C2%B2%20Discovery%20Call" className="px-5 py-2 bg-[#f60030] text-white rounded-full text-sm hover:bg-white hover:text-[#f60030] transition-colors inline-block">
-                Get In Touch
-              </a>
+              <button onClick={() => navGo('community')} className={linkCls('community')}>Locked In</button>
+              <button onClick={() => navGo('contact')} className={linkCls('contact')}>Contact</button>
             </div>
+
+            {/* Mobile hamburger */}
+            <button onClick={() => setOpen(!open)} className="md:hidden w-8 h-8 flex items-center justify-center text-[#1a1a1a]">
+              {open ? '✕' : '☰'}
+            </button>
           </div>
+
+          {/* Mobile menu */}
+          {open && (
+            <div className="md:hidden bg-white border-t border-black/5 py-4 animate-fadeIn">
+              {[['about','About'],['cv','CV'],['built',"Stuff I'm Building"],['community','Locked In'],['opportunities','Opportunities'],['contact','Contact']].map(([id,label]) => (
+                <button key={id} onClick={() => navGo(id)}
+                  className={`block w-full text-left px-8 py-3 text-sm ${page === id ? 'text-[#f60030]' : 'text-[#1a1a1a]/60'}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
       );
     };
 
-    const EM2Page = ({ setCurrentPage }) => (
-      <div className="min-h-screen bg-[#3b0918]">
-        <EM2Navigation setCurrentPage={setCurrentPage} />
+    // ── HOME ───────────────────────────────────────────────────
+    const Home = ({ go }) => (
+      <div className="bg-white">
 
         {/* Hero */}
-        <section className="min-h-screen flex items-center justify-center px-8 pt-20">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.3em] text-sm mb-8">em² Marketing Consultancy</p>
-            </ScrollReveal>
-            <ScrollReveal delay={200}>
-              <h1 className="font-serif text-4xl md:text-6xl text-[#fff3d9] mb-8 leading-tight">
-                Marketing That Takes<br />
-                <span className="italic text-[#f60030]">Students</span> Seriously
-              </h1>
-            </ScrollReveal>
-            <ScrollReveal delay={400}>
-              <p className="text-xl text-[#fff3d9]/70 max-w-2xl mx-auto mb-12 leading-relaxed">
-                I help teams build authentic connections with student audiences.
-              </p>
-            </ScrollReveal>
-            <ScrollReveal delay={600}>
-              <a href="mailto:erinmeryl@icloud.com?subject=em%C2%B2%20Discovery%20Call" className="px-10 py-4 bg-[#f60030] text-white rounded-full hover:bg-white hover:text-[#f60030] transition-all duration-300 inline-block">
-                Book a Discovery Call
-              </a>
-            </ScrollReveal>
+        <section className="min-h-screen pt-16 px-8 md:px-16 flex items-center">
+          <div className="max-w-7xl mx-auto w-full grid md:grid-cols-5 gap-8 md:gap-16 items-center py-20">
+
+            {/* Left — text */}
+            <div className="md:col-span-3">
+              <SR>
+                <div className="flex flex-wrap gap-2 mb-10">
+                  {['Cambridge Student','Content Creator','Community Builder'].map(t => (
+                    <span key={t} className="text-xs px-3 py-1.5 border border-[#3b0918]/15 text-[#3b0918]/50 rounded-full">{t}</span>
+                  ))}
+                </div>
+              </SR>
+              <SR delay={100}>
+                <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#3b0918] leading-[1.04] mb-8">
+                  Making learning<br />as <em className="italic text-[#f60030]">addictive</em><br />as social media
+                </h1>
+              </SR>
+              <SR delay={200}>
+                <p className="text-[#5a5a5a] text-base leading-relaxed mb-10 max-w-lg">
+                  I create content, build community and make tools that help students fall back in love with learning.
+                </p>
+              </SR>
+              <SR delay={300}>
+                <div className="flex flex-wrap gap-3">
+                  <button onClick={() => go('community')} className="px-7 py-3.5 bg-[#f60030] text-white rounded-full text-sm hover:bg-[#3b0918] transition-colors duration-300">
+                    Join Locked In →
+                  </button>
+                  <button onClick={() => go('about')} className="px-7 py-3.5 border border-[#1a1a1a]/15 text-[#1a1a1a] rounded-full text-sm hover:border-[#1a1a1a]/40 transition-colors duration-300">
+                    About Me
+                  </button>
+                </div>
+              </SR>
+            </div>
+
+            {/* Right — photo + stat cards */}
+            <div className="md:col-span-2">
+              <SR delay={150}>
+                <div className="relative">
+                  {/* Beige backdrop block */}
+                  <div className="absolute -top-4 -right-4 w-full h-full bg-[#fff3d9] rounded-3xl"></div>
+                  {/* Red accent dot */}
+                  <div className="absolute -bottom-3 -left-3 w-12 h-12 bg-[#f60030] rounded-full z-10"></div>
+                  {/* Photo */}
+                  <div className="relative rounded-3xl overflow-hidden aspect-[3/4] shadow-lg">
+                    <img src="profile.png" alt="Erin Meryl McGurk" className="w-full h-full object-cover" />
+                  </div>
+                  {/* Floating stat pill */}
+                  <div className="absolute -bottom-5 right-6 bg-white shadow-lg rounded-2xl px-5 py-3 z-20">
+                    <p className="font-serif text-2xl text-[#f60030]">400K+</p>
+                    <p className="text-xs text-[#5a5a5a]">Student community</p>
+                  </div>
+                </div>
+              </SR>
+            </div>
           </div>
         </section>
 
-        {/* What I Do */}
-        <section className="py-32 px-8 bg-[#fff3d9]">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">What I Offer</p>
-              <h2 className="font-serif text-4xl text-[#3b0918] mb-8">
-                Content Strategy That Connects
-              </h2>
-              <p className="text-lg text-[#5a5a5a] max-w-2xl mx-auto mb-16">
-                My approach is unique, informed by time spent creating for, and listening to, student audiences.
-              </p>
-            </ScrollReveal>
+        {/* Marquee strip */}
+        <div className="bg-[#fff3d9] border-y border-[#3b0918]/8 py-4 overflow-hidden">
+          <div className="flex animate-marquee whitespace-nowrap">
+            {[
+              '400K+ Followers','·','100M+ Lives Touched','·','30+ Brand Collaborations','·','15+ Speaking Events','·',
+              'Samsung','·','Google Gemini','·','OpenAI','·','Loop Earplugs','·','BackMarket','·',
+              'ITV','·','BBC Manchester','·','The Heard','·',
+              '400K+ Followers','·','100M+ Lives Touched','·','30+ Brand Collaborations','·','15+ Speaking Events','·',
+              'Samsung','·','Google Gemini','·','OpenAI','·','Loop Earplugs','·','BackMarket','·',
+              'ITV','·','BBC Manchester','·','The Heard','·',
+            ].map((t, i) => (
+              <span key={i} className={`mx-4 text-sm ${t === '·' ? 'text-[#f60030]' : 'text-[#3b0918]/60 font-medium'}`}>{t}</span>
+            ))}
+          </div>
+        </div>
 
-            <div className="space-y-8">
+        {/* Three destination cards */}
+        <section className="py-20 px-8 md:px-16 bg-white">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-6">
+            {[
+              {
+                tag: 'Community',
+                title: 'Locked In',
+                desc: "My community for ambitious students who want more from their learning and their lives.",
+                page: 'community',
+                bg: DARK,
+                text: '#fff3d9',
+              },
+              {
+                tag: "Building",
+                title: "Stuff I'm Building",
+                desc: "Tools, platforms and resources I've created — from free websites to study resources.",
+                page: 'built',
+                bg: BEIGE,
+                text: DARK,
+              },
+              {
+                tag: 'For Students',
+                title: 'Opportunities',
+                desc: 'Curated scholarships, internships, competitions and events worth applying for.',
+                page: 'opportunities',
+                bg: '#f60030',
+                text: '#fff',
+              },
+            ].map((item, i) => (
+              <SR key={i} delay={i * 80}>
+                <button onClick={() => go(item.page)}
+                  className="group w-full text-left rounded-3xl p-8 md:p-10 h-full flex flex-col justify-between min-h-[260px] hover:scale-[1.02] transition-transform duration-300"
+                  style={{ backgroundColor: item.bg, color: item.text }}>
+                  <div>
+                    <span className="text-xs uppercase tracking-widest opacity-50 mb-5 block">{item.tag}</span>
+                    <h3 className="font-serif text-2xl md:text-3xl mb-3">{item.title}</h3>
+                    <p className="text-sm leading-relaxed opacity-65">{item.desc}</p>
+                  </div>
+                  <span className="text-sm mt-6 opacity-75 group-hover:opacity-100 transition-opacity">Explore →</span>
+                </button>
+              </SR>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+
+    // ── ABOUT ──────────────────────────────────────────────────
+    const About = () => (
+      <div className="bg-white pt-16">
+
+        {/* Big header band */}
+        <div className="bg-[#fff3d9] px-8 md:px-16 py-16 md:py-24">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-end">
+            <SR>
+              <p className="text-xs uppercase tracking-widest text-[#f60030] mb-4">About Me</p>
+              <h1 className="font-serif text-5xl md:text-7xl text-[#3b0918] leading-tight">
+                Hi,<br />I'm Erin.
+              </h1>
+            </SR>
+            <SR delay={100}>
+              <p className="text-lg text-[#3b0918]/60 leading-relaxed font-serif italic max-w-md">
+                "Cambridge student, content creator, and community builder — making learning addictive since 2024."
+              </p>
+            </SR>
+          </div>
+        </div>
+
+        {/* Bio + photo */}
+        <section className="px-8 md:px-16 py-20">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-5 gap-12 items-start">
+
+            <div className="md:col-span-2">
+              <SR>
+                <div className="rounded-3xl overflow-hidden aspect-[4/5] shadow-md">
+                  <img src="profile.png" alt="Erin" className="w-full h-full object-cover" />
+                </div>
+                <div className="mt-6 space-y-0">
+                  {[
+                    ['Location','Cambridge, UK'],
+                    ['Course','Land Economy'],
+                    ['College',"St John's, Cambridge"],
+                    ['Year','2nd year undergraduate'],
+                  ].map(([l, v]) => (
+                    <div key={l} className="flex gap-4 text-sm py-3 border-b border-black/5">
+                      <span className="text-black/30 w-20 shrink-0 text-xs uppercase tracking-wide">{l}</span>
+                      <span className="text-[#1a1a1a]">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </SR>
+            </div>
+
+            <div className="md:col-span-3 space-y-8">
+              <SR delay={80}>
+                <div className="space-y-5 text-[#5a5a5a] text-sm leading-relaxed">
+                  <p>
+                    I'm a second year student at <strong className="text-[#3b0918]">St John's College, Cambridge</strong>, studying Land Economy — a mix of law, economics and public policy.
+                  </p>
+                  <p>
+                    I started making content in August 2024 and grew a community of <strong className="text-[#3b0918]">400K+ students</strong> in under a year. What started as study tips became something much bigger — a genuine conversation about how people learn, why curiosity matters, and how to stay motivated in a world built to distract you.
+                  </p>
+                  <p>
+                    My mission: <em className="text-[#3b0918] font-serif italic text-base">to help people fall back in love with learning</em>. Everything I make — from content and community to the tools I build — comes back to that.
+                  </p>
+                </div>
+              </SR>
+
+              {/* Fun facts */}
+              <SR delay={160}>
+                <p className="text-xs uppercase tracking-widest text-black/30 mb-5">Beyond the Content</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { e: '🏃', t: 'Training for a 100km race in the Chilterns' },
+                    { e: '☕', t: 'Chai latte + brunch — every week, non-negotiable' },
+                    { e: '🚀', t: 'Research: Space Governance and satellite AI alignment' },
+                    { e: '🎓', t: 'Formal dinner at every Cambridge college. 7/31' },
+                  ].map((x, i) => (
+                    <div key={i} className="bg-[#fff3d9] rounded-2xl p-5 flex gap-3 items-start">
+                      <span className="text-xl shrink-0">{x.e}</span>
+                      <p className="text-xs text-[#5a5a5a] leading-relaxed">{x.t}</p>
+                    </div>
+                  ))}
+                </div>
+              </SR>
+            </div>
+          </div>
+        </section>
+
+        {/* Experience — alternating row cards */}
+        <section className="px-8 md:px-16 pb-20">
+          <div className="max-w-7xl mx-auto">
+            <SR>
+              <div className="flex items-baseline gap-6 mb-10">
+                <h2 className="font-serif text-3xl text-[#3b0918]">Experience</h2>
+                <div className="flex-1 border-t border-black/8 mt-2"></div>
+              </div>
+            </SR>
+            <div className="space-y-4">
               {[
-                { title: 'Strategy Review',  desc: 'A focused piece of work where I look closely at how you’re currently communicating with students. This includes reviewing existing content, understanding who you’re trying to reach, and identifying where things feel misaligned or unclear. The aim is to give you a clearer picture of what’s working, what isn’t, and where there’s room to improve.', includes: ['Existing content review', 'Tone and messaging feedback', 'Clear improvement directions'] },
-                { title: 'Content Direction',  desc: 'This is about creating structure. I help you develop a clear, repeatable way of thinking about content so you’re not starting from scratch every time. The focus is on tone, format, and direction, shaped by how students actually engage with content rather than what feels trendy.', includes: ['Defined content voice', 'Consistency guidance', 'Audience-appropriate thematic direction'], featured: true },
-                { title: 'Ongoing Partnership',  desc: 'For teams who want continued strategic input rather than a one-off project. This usually involves regular conversations, reviewing content as it’s developed, and refining direction as things evolve. I want to act as a thinking partner: someone who understands your audience and can help you make decisions with more confidence.', includes: ['Regular strategy check-ins', 'Content feedback', 'Direction adjustments', 'Longer-term campaigns'] },
-              ].map((service, i) => (
-                <ScrollReveal key={i} delay={i * 150}>
-                  <div className={`p-10 rounded-3xl text-left ${service.featured ? 'bg-[#3b0918] text-[#fff3d9]' : 'bg-white'}`}>
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-                      <div className="flex-1">
-                        <h3 className="font-serif text-2xl mb-2">{service.title}</h3>
-                        <p className={`mb-4 ${service.featured ? 'text-[#fff3d9]/70' : 'text-[#5a5a5a]'}`}>{service.desc}</p>
-                        <ul className="space-y-2">
-                          {service.includes.map((item, j) => (
-                            <li key={j} className="flex items-center gap-2">
-                              <span className="text-[#f60030]">✓</span>
-                              <span className={service.featured ? 'text-[#fff3d9]/80' : 'text-[#5a5a5a]'}>{item}</span>
+                { y: 'Aug 2024 – Present', t: 'Content Creator & Study Coach', o: 'erinmerylstudy', d: '400K+ students across platforms sharing neuroscience-backed study strategies. 30+ brand collaborations. 15+ speaking events. Featured by ITV, BBC Manchester and The Heard.' },
+                { y: 'Oct 2024 – Present', t: 'Undergraduate Student', o: "St John's College, University of Cambridge", d: 'Studying Land Economy. Co-founder of the French Rock Society and involved in college and university outreach programmes.' },
+                { y: 'Dec 2025 – Present', t: 'Grantee', o: 'Cosmos Institute', d: 'Awarded funding to build a platform teaching effective and responsible AI use to students. Research focus: Space Governance and the alignment of satellite-based AI systems.' },
+                { y: '2025 – Present', t: 'Marketing Consultant', o: 'em²', d: 'Strategic consultancy helping organisations — from startups to the University of Cambridge — connect authentically with student audiences.' },
+              ].map((item, i) => (
+                <SR key={i} delay={i * 60}>
+                  <div className={`grid md:grid-cols-4 gap-6 p-7 rounded-2xl ${i % 2 === 0 ? 'bg-white border border-black/6' : 'bg-[#fff3d9]'}`}>
+                    <div>
+                      <span className="text-xs text-[#f60030] font-medium">{item.y}</span>
+                    </div>
+                    <div className="md:col-span-3">
+                      <h3 className="font-serif text-lg text-[#3b0918] mb-0.5">{item.t}</h3>
+                      <p className="text-xs text-[#5a5a5a] font-medium mb-2">{item.o}</p>
+                      <p className="text-sm text-[#5a5a5a] leading-relaxed">{item.d}</p>
+                    </div>
+                  </div>
+                </SR>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+
+    // ── LOCKED IN (Community) ──────────────────────────────────
+    const STAN = 'https://stan.store/erinmerylstudy/p/locked-in-with-erinmerylstudy';
+
+    const Community = () => (
+      <div className="bg-white pt-16">
+
+        {/* Full-bleed dark hero */}
+        <div className="bg-[#3b0918] min-h-screen flex items-center px-8 md:px-16 py-24">
+          <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-16 items-center">
+            <SR>
+              <p className="text-xs uppercase tracking-widest text-[#f60030] mb-8">Community</p>
+              <h1 className="font-serif text-7xl md:text-9xl text-[#fff3d9] leading-none mb-8">
+                Locked<br /><em className="italic text-[#f60030]">In.</em>
+              </h1>
+              <a href={STAN} target="_blank" rel="noopener noreferrer"
+                className="inline-block px-8 py-4 bg-[#f60030] text-white rounded-full text-sm hover:bg-white hover:text-[#f60030] transition-colors duration-300">
+                Join Now →
+              </a>
+            </SR>
+            <SR delay={150}>
+              <p className="font-serif text-2xl md:text-3xl text-[#fff3d9]/60 leading-relaxed italic">
+                "A community for ambitious students who want to take their learning — and their lives — seriously."
+              </p>
+              <div className="mt-12 space-y-4">
+                {["Students who want to understand, not just pass", "Anyone who has fallen out of love with studying", "People who are serious about building something with their life"].map((s, i) => (
+                  <div key={i} className="flex gap-3 items-start">
+                    <span className="text-[#f60030] shrink-0 mt-0.5 text-lg">—</span>
+                    <p className="text-sm text-[#fff3d9]/60 leading-relaxed">{s}</p>
+                  </div>
+                ))}
+              </div>
+            </SR>
+          </div>
+        </div>
+
+        {/* What you get — white section */}
+        <section className="px-8 md:px-16 py-20 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <SR>
+              <div className="flex items-baseline gap-6 mb-12">
+                <h2 className="font-serif text-3xl text-[#3b0918]">What you get</h2>
+                <div className="flex-1 border-t border-black/8"></div>
+              </div>
+            </SR>
+            <div className="grid md:grid-cols-4 gap-5">
+              {[
+                { icon: '📚', t: 'Study Resources', d: 'Neuroscience-backed strategies to study more effectively — not just more hours.' },
+                { icon: '🤝', t: 'Real Community', d: 'A motivated group of students from around the world who are serious about growth.' },
+                { icon: '🎯', t: 'Accountability', d: 'Stay on track with your goals alongside people who understand what ambition looks like.' },
+                { icon: '💡', t: 'Exclusive Content', d: 'First access to new resources, deep dives and content before anyone else.' },
+              ].map((x, i) => (
+                <SR key={i} delay={i * 70}>
+                  <div className="bg-[#fff3d9] rounded-3xl p-8 h-full">
+                    <div className="text-3xl mb-5">{x.icon}</div>
+                    <h3 className="font-serif text-lg text-[#3b0918] mb-2">{x.t}</h3>
+                    <p className="text-sm text-[#5a5a5a] leading-relaxed">{x.d}</p>
+                  </div>
+                </SR>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials + CTA */}
+        <section className="px-8 md:px-16 py-20 bg-[#fff3d9]">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-5 gap-8 items-start">
+            <div className="md:col-span-3 space-y-5">
+              <SR>
+                <p className="text-xs uppercase tracking-widest text-[#f60030] mb-8">What students say</p>
+              </SR>
+              {[
+                { q: 'Your videos helped me ace my A Levels and get into my dream university!', n: 'Emilia', d: 'University of Oxford, Chemistry' },
+                { q: 'I used to hate studying maths, but now I actually enjoy it!', n: 'James', d: 'Dubai College, A Levels' },
+              ].map((t, i) => (
+                <SR key={i} delay={i * 80}>
+                  <div className="bg-white rounded-2xl p-7">
+                    <p className="font-serif text-lg text-[#3b0918] italic mb-5">"{t.q}"</p>
+                    <p className="text-sm font-medium text-[#3b0918]">{t.n}</p>
+                    <p className="text-xs text-[#5a5a5a]">{t.d}</p>
+                  </div>
+                </SR>
+              ))}
+            </div>
+            <SR delay={100} className="md:col-span-2">
+              <div className="bg-[#f60030] rounded-3xl p-10 flex flex-col gap-6">
+                <h3 className="font-serif text-3xl text-white leading-tight">Ready to get Locked In?</h3>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  Join a community of ambitious students who are serious about their learning and their future.
+                </p>
+                <a href={STAN} target="_blank" rel="noopener noreferrer"
+                  className="inline-block self-start px-7 py-3.5 bg-white text-[#f60030] rounded-full text-sm hover:bg-[#3b0918] hover:text-white transition-colors duration-300">
+                  Join Locked In →
+                </a>
+              </div>
+            </SR>
+          </div>
+        </section>
+      </div>
+    );
+
+    // ── STUFF I'M BUILDING ─────────────────────────────────────
+    const Built = () => (
+      <div className="bg-white pt-16">
+
+        <div className="bg-[#fff3d9] px-8 md:px-16 py-16 md:py-24">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-end">
+            <SR>
+              <p className="text-xs uppercase tracking-widest text-[#f60030] mb-4">Projects</p>
+              <h1 className="font-serif text-5xl md:text-6xl text-[#3b0918] leading-tight">
+                Stuff I'm<br />Building
+              </h1>
+            </SR>
+            <SR delay={80}>
+              <p className="text-[#3b0918]/55 text-base leading-relaxed max-w-md">
+                Tools, platforms and resources I've built — or am currently building — for students. Some are live, some are coming soon.
+              </p>
+            </SR>
+          </div>
+        </div>
+
+        <section className="px-8 md:px-16 py-20">
+          <div className="max-w-7xl mx-auto">
+
+            {/* Featured — Leastpath */}
+            <SR>
+              <a href="https://leastpath.io" target="_blank" rel="noopener noreferrer"
+                className="group block bg-[#3b0918] rounded-3xl overflow-hidden mb-8 hover:shadow-2xl transition-shadow duration-500">
+                <div className="grid md:grid-cols-2">
+                  <div className="p-12 md:p-16 flex flex-col justify-center">
+                    <div className="flex items-center gap-3 mb-6">
+                      <span className="text-xs text-[#f60030] uppercase tracking-widest">Website</span>
+                      <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full">Live</span>
+                    </div>
+                    <h2 className="font-serif text-4xl md:text-5xl text-[#fff3d9] mb-4">Leastpath</h2>
+                    <p className="text-[#fff3d9]/55 leading-relaxed mb-8 max-w-sm">
+                      A free tool for exploring new ideas and discovering things worth learning. Curiosity as a search engine.
+                    </p>
+                    <span className="text-[#f60030] text-sm group-hover:underline">Visit leastpath.io →</span>
+                  </div>
+                  <div className="relative overflow-hidden min-h-[240px]">
+                    <img src="leastpath.png" alt="Leastpath" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-55 transition-opacity duration-500" />
+                  </div>
+                </div>
+              </a>
+            </SR>
+
+            {/* Grid */}
+            <div className="grid md:grid-cols-3 gap-5">
+              {[
+                { t: 'AI for Students Platform', type: 'Platform', d: 'A platform teaching effective and responsible AI use to students. Backed by the Cosmos Institute.', s: 'In Development', url: null, img: null },
+                { t: 'The Locked In Planner', type: 'Physical Notebook', d: 'A purpose-built study planner for ambitious students. Designed to keep you focused and motivated.', s: 'Coming Soon', url: null, img: 'planner.jpg' },
+                { t: 'My Notion Template', type: 'Digital Template', d: 'The Notion setup I actually use to manage my studies, content and goals at Cambridge.', s: 'Coming Soon', url: null, img: 'notion.png' },
+                { t: '1:1 Study Coaching', type: 'Coaching', d: 'A personalised session to work on your study habits, exam strategy and academic mindset.', s: 'Available — £80', url: 'https://stan.store/erinmerylstudyy/p/11-academic-coaching-with-erin', img: 'profile.png' },
+              ].map((item, i) => (
+                <SR key={i} delay={i * 70}>
+                  <div className="border border-black/6 rounded-2xl overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
+                    {item.img
+                      ? <div className="aspect-[16/9] overflow-hidden bg-[#fff3d9]"><img src={item.img} alt={item.t} className="w-full h-full object-cover" /></div>
+                      : <div className="aspect-[16/9] bg-[#fff3d9] flex items-center justify-center"><span className="text-4xl opacity-20">🛠️</span></div>
+                    }
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs text-[#f60030] uppercase tracking-widest">{item.type}</span>
+                        <span className={`text-xs px-2.5 py-1 rounded-full ${item.s.startsWith('Available') ? 'bg-emerald-50 text-emerald-700' : item.s === 'In Development' ? 'bg-sky-50 text-sky-700' : 'bg-[#fff3d9] text-[#3b0918]/60'}`}>{item.s}</span>
+                      </div>
+                      <h3 className="font-serif text-lg text-[#3b0918] mb-2">{item.t}</h3>
+                      <p className="text-xs text-[#5a5a5a] leading-relaxed mb-5 flex-1">{item.d}</p>
+                      {item.url
+                        ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="self-start text-xs px-4 py-2 bg-[#3b0918] text-white rounded-full hover:bg-[#f60030] transition-colors">Visit →</a>
+                        : <span className="text-xs text-black/25">Stay tuned</span>
+                      }
+                    </div>
+                  </div>
+                </SR>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+
+    // ── CV ─────────────────────────────────────────────────────
+    const CV = () => (
+      <div className="bg-white pt-16">
+        <section className="px-8 md:px-16 py-16">
+          <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-10 md:gap-16">
+
+            {/* Sidebar */}
+            <div>
+              <SR>
+                <div className="sticky top-24">
+                  <p className="text-xs uppercase tracking-widest text-[#f60030] mb-6">Curriculum Vitae</p>
+                  <h1 className="font-serif text-3xl text-[#3b0918] leading-tight mb-1">Erin Meryl<br />McGurk</h1>
+                  <p className="text-xs text-[#5a5a5a] mb-8">Cambridge, UK</p>
+                  <div className="space-y-2 mb-8 pb-8 border-b border-black/6">
+                    <a href="mailto:erinmeryl@icloud.com" className="flex gap-2 items-center text-xs text-[#5a5a5a] hover:text-[#f60030] transition-colors">
+                      <span>✉</span> erinmeryl@icloud.com
+                    </a>
+                    <a href="https://linkedin.com/in/erin-mcgurk" target="_blank" rel="noopener noreferrer" className="flex gap-2 items-center text-xs text-[#5a5a5a] hover:text-[#f60030] transition-colors">
+                      <span>in</span> linkedin.com/in/erin-mcgurk
+                    </a>
+                  </div>
+                  <div className="mb-6">
+                    <p className="text-xs uppercase tracking-widest text-black/25 mb-3">Skills</p>
+                    <div className="flex flex-wrap gap-2">
+                      {['Content Creation','Public Speaking','Marketing Strategy','Community Building','Research','Video Production'].map(s => (
+                        <span key={s} className="text-xs px-3 py-1.5 bg-[#fff3d9] text-[#3b0918] rounded-full">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="mb-8">
+                    <p className="text-xs uppercase tracking-widest text-black/25 mb-3">Interests</p>
+                    <div className="flex flex-wrap gap-2">
+                      {['Space Governance','AI in Education','Neuroscience of Learning','Long Distance Running','French Rock'].map(s => (
+                        <span key={s} className="text-xs px-3 py-1.5 bg-[#fff3d9] text-[#3b0918] rounded-full">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <a href="cv.pdf" download className="inline-flex items-center gap-2 px-5 py-3 border border-[#3b0918]/15 text-[#3b0918] rounded-full text-xs hover:bg-[#3b0918] hover:text-white hover:border-[#3b0918] transition-all duration-300">
+                    Download PDF ↓
+                  </a>
+                </div>
+              </SR>
+            </div>
+
+            {/* Main */}
+            <div className="md:col-span-2 space-y-12">
+              <SR delay={80}>
+                <div>
+                  <h2 className="font-serif text-xl text-[#3b0918] mb-6 pb-3 border-b border-black/8">Education</h2>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-sm font-semibold text-[#3b0918]">St John's College, University of Cambridge</h3>
+                      <p className="text-xs text-[#5a5a5a] mt-1">BA Land Economy — Law, Economics & Public Policy</p>
+                      <p className="text-xs text-[#5a5a5a] mt-1.5">Co-founder, French Rock Society · College & university outreach</p>
+                    </div>
+                    <span className="text-xs text-[#5a5a5a] whitespace-nowrap ml-6 shrink-0">Oct 2024 – Present</span>
+                  </div>
+                </div>
+              </SR>
+              <SR delay={140}>
+                <div>
+                  <h2 className="font-serif text-xl text-[#3b0918] mb-6 pb-3 border-b border-black/8">Experience</h2>
+                  <div className="space-y-10">
+                    {[
+                      { r: 'Content Creator & Study Coach', o: 'erinmerylstudy', p: 'Aug 2024 – Present', pts: ['Built a 400K+ student community across platforms sharing neuroscience-backed study content','30+ brand collaborations including Samsung, Google Gemini, OpenAI and Loop Earplugs','15+ speaking events at schools, universities and education conferences','Featured by ITV, BBC Manchester and The Heard'] },
+                      { r: 'Grantee', o: 'Cosmos Institute', p: 'Dec 2025 – Present', pts: ['Awarded funding to build a platform teaching effective and responsible AI use to students','Research focus: Space Governance and the alignment of satellite-based AI systems'] },
+                      { r: 'Marketing Consultant', o: 'em²', p: '2025 – Present', pts: ['Strategic consultancy helping organisations connect authentically with student audiences','Clients range from startups and non-profits to the University of Cambridge'] },
+                    ].map((x, i) => (
+                      <div key={i}>
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="text-sm font-semibold text-[#3b0918]">{x.r}</h3>
+                            <p className="text-xs text-[#f60030]">{x.o}</p>
+                          </div>
+                          <span className="text-xs text-[#5a5a5a] whitespace-nowrap ml-6 shrink-0">{x.p}</span>
+                        </div>
+                        <ul className="mt-2 space-y-1.5">
+                          {x.pts.map((p, j) => (
+                            <li key={j} className="text-xs text-[#5a5a5a] flex gap-2 leading-relaxed">
+                              <span className="text-[#f60030] shrink-0">–</span>{p}
                             </li>
                           ))}
                         </ul>
                       </div>
-                      <div className="text-right">
-                        <a href="mailto:erinmeryl@icloud.com?subject=em%C2%B2%20Discovery%20Call" className={`px-6 py-2 rounded-full text-sm transition-colors inline-block ${service.featured ? 'bg-[#f60030] text-white hover:bg-white hover:text-[#f60030]' : 'bg-[#3b0918] text-white hover:bg-[#f60030]'}`}>
-                          Learn More
-                        </a>
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </ScrollReveal>
-              ))}
+                </div>
+              </SR>
             </div>
           </div>
         </section>
-
-        {/* Why Me */}
-        <section className="py-32 px-8 bg-[#3b0918]">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Why EM2</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#fff3d9] mb-12">
-                I've Built What I'm Teaching
-              </h2>
-            </ScrollReveal>
-
-            <div className="space-y-12 text-left">
-              {[
-                { title: "I've grown my own audience from scratch.", text: 'My understanding of student audiences comes experimenting publicly as I build erinmerylstudy over time, paying close attention to what students actually respond to. This experience shapes how I think about content, tone, and trust in a way that isn’t theoretical.' },
-                { title: 'Strategy should be creative, not boring.', text: 'I bring creator intuition into marketing strategy, grounding every decision in data and observation rather than just trends. That means thinking carefully about how your messages land, and why some content will earn you trust, while other content is ignored.' },
-                { title: "I've applied my work in organisations large and small.", text: 'I have experience working with a variety of clients (from startups, to non-profits, to the University of Cambridge!) and I really understand the unique challenges and motivations faced by each type of organisation.' },
-              ].map((point, i) => (
-                <ScrollReveal key={i} delay={i * 150}>
-                  <div className="pl-6 border-l-2 border-[#f60030]">
-                    <h3 className="font-serif text-xl text-[#f60030] mb-3">{point.title}</h3>
-                    <p className="text-lg text-[#fff3d9]/80 leading-relaxed">{point.text}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Results */}
-        <section className="py-32 px-8 bg-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <ScrollReveal>
-              <p className="text-[#f60030] uppercase tracking-[0.2em] text-sm mb-6">Results</p>
-              <h2 className="font-serif text-3xl text-[#3b0918] mb-16">What Clients Say</h2>
-            </ScrollReveal>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  metric: 'Effortless Content Improvement',
-                  quote: 'Having someone who understands student behaviour made such a real difference. The feedback was incredibly thoughtful and easy to apply.',
-                  name: 'Marketing Lead',
-                  company: 'Snack Brand'
-                },
-                {
-                  metric: 'Increased Student Engagement',
-                  quote: 'The strategies implemented led to a noticeable increase in student engagement across our platforms. Some great refinements!',
-                  name: 'Outreach',
-                  company: 'University of Cambridge'
-                }
-              ].map((testimonial, i) => (
-                <ScrollReveal key={i} delay={i * 150}>
-                  <div className="bg-[#fff3d9] p-8 rounded-2xl text-left">
-                    <p className="text-3xl font-serif text-[#f60030] mb-4">"{testimonial.metric}"</p>
-                    <p className="text-[#5a5a5a] italic mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                    <p className="text-sm font-medium text-[#3b0918]">{testimonial.name}, {testimonial.company}</p>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA */}
-        <section className="py-32 px-8 bg-[#f60030]">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollReveal>
-              <h2 className="font-serif text-3xl md:text-4xl text-white mb-8">
-                Ready to reach students authentically?
-              </h2>
-              <p className="text-white/80 mb-12 max-w-xl mx-auto">
-                Let's talk about how you can develop genuine connections with student audiences using content that resonates.
-              </p>
-              <a href="mailto:erinmeryl@icloud.com?subject=em%C2%B2%20Discovery%20Call" className="px-10 py-4 bg-white text-[#f60030] rounded-full hover:bg-[#3b0918] hover:text-white transition-all duration-300 inline-block">
-                Schedule a Call
-              </a>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* EM2 Footer */}
-        <footer className="py-12 px-8 bg-[#3b0918] border-t border-[#fff3d9]/10">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-center md:text-left">
-              <span className="font-serif text-xl text-[#fff3d9]">em²</span>
-              <p className="text-[#fff3d9]/50 text-sm mt-1">A marketing agency by erinmerylstudy</p>
-            </div>
-            <button onClick={() => setCurrentPage('home')} className="text-[#fff3d9]/50 hover:text-[#f60030] transition-colors text-sm">
-              Return to main site →
-            </button>
-          </div>
-        </footer>
       </div>
     );
 
-    // ============================================
-    // MAIN SITE FOOTER
-    // ============================================
-    const Footer = ({ setCurrentPage }) => (
-      <footer className="bg-[#3b0918] text-[#fff3d9] py-20 px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="font-serif text-2xl mb-6">erinmerylstudy</h3>
-          <p className="text-[#fff3d9]/60 mb-8 max-w-md mx-auto">
-            Making learning as addictive as social media.
-          </p>
-          <div className="flex flex-wrap justify-center gap-6 mb-12">
-            {[
-              { id: 'about', label: 'About' },
-              { id: 'mission', label: 'Mission' },
-              { id: 'students', label: 'For Students' },
-              { id: 'projects', label: 'Work' },
-              { id: 'media', label: 'Media Kit' },
-              { id: 'contact', label: 'Contact' },
-              { id: 'em2', label: 'EM2' },
-            ].map((link) => (
-              <button key={link.id} onClick={() => setCurrentPage(link.id)} className="text-[#fff3d9]/60 hover:text-[#f60030] transition-colors text-sm">{link.label}</button>
+    // ── OPPORTUNITIES ──────────────────────────────────────────
+    const Opps = () => {
+      const [f, setF] = useState('all');
+      const cats = [
+        { id: 'all', l: 'All' }, { id: 'scholarship', l: 'Scholarships' },
+        { id: 'internship', l: 'Internships' }, { id: 'competition', l: 'Competitions' },
+        { id: 'event', l: 'Events & Programmes' },
+      ];
+      const clr = { scholarship: 'bg-violet-50 text-violet-700', internship: 'bg-sky-50 text-sky-700', competition: 'bg-amber-50 text-amber-700', event: 'bg-emerald-50 text-emerald-700' };
+      const lbl = { scholarship: 'Scholarship', internship: 'Internship', competition: 'Competition', event: 'Event' };
+      const opps = [
+        { id:1, cat:'scholarship', t:'Gates Cambridge Scholarship', o:'Gates Foundation', dl:'Oct 2025', d:'Full funding for outstanding students from outside the UK to pursue a postgraduate degree at Cambridge.', l:'https://www.gatescambridge.org/' },
+        { id:2, cat:'scholarship', t:'Chevening Scholarship', o:'UK Government', dl:'Nov 2025', d:'Fully funded Masters scholarships for future leaders from over 160 countries around the world.', l:'https://www.chevening.org/' },
+        { id:3, cat:'internship', t:'Goldman Sachs Summer Analyst', o:'Goldman Sachs', dl:'Dec 2025', d:'10-week summer internship across Investment Banking, Asset Management, Engineering and more.', l:'https://www.goldmansachs.com/careers/students/' },
+        { id:4, cat:'internship', t:'Civil Service Fast Stream', o:'UK Government', dl:'Oct 2025', d:'Accelerated leadership programme for graduates joining the UK Civil Service across all departments.', l:'https://www.faststream.gov.uk/' },
+        { id:5, cat:'competition', t:'Fulbright UK Student Award', o:'US-UK Fulbright Commission', dl:'Oct 2025', d:'Study or research in the United States for one academic year. Open to UK citizens.', l:'https://www.fulbright.org.uk/apply/uk-students/' },
+        { id:6, cat:'competition', t:'Oxford Union Debate Competition', o:'Oxford Union', dl:'Ongoing', d:'Open debating competitions at the world-famous Oxford Union. Great for building confidence and rhetoric.', l:'https://www.oxford-union.org/' },
+        { id:7, cat:'event', t:'One Young World Summit', o:'One Young World', dl:'Apr 2026', d:'Global forum bringing together the brightest young leaders from every country and sector.', l:'https://www.oneyoungworld.com/' },
+        { id:8, cat:'event', t:'Moritz-Heyman Enrichment Programme', o:'University of Oxford', dl:'Feb 2026', d:'Residential programme for high-achieving Year 12 students from low-income backgrounds in England.', l:'https://www.ox.ac.uk/mhep' },
+      ];
+      const filtered = f === 'all' ? opps : opps.filter(o => o.cat === f);
+
+      return (
+        <div className="bg-white pt-16">
+          <div className="bg-[#fff3d9] px-8 md:px-16 py-16 md:py-24">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-end">
+              <SR>
+                <p className="text-xs uppercase tracking-widest text-[#f60030] mb-4">For Students</p>
+                <h1 className="font-serif text-5xl md:text-6xl text-[#3b0918]">Opportunities</h1>
+              </SR>
+              <SR delay={80}>
+                <p className="text-[#3b0918]/55 leading-relaxed">Curated scholarships, internships, competitions and events worth applying for. Updated regularly — check back often!</p>
+              </SR>
+            </div>
+          </div>
+
+          <section className="px-8 md:px-16 py-16">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+              <div>
+                <SR>
+                  <div className="sticky top-24 space-y-1.5">
+                    <p className="text-xs uppercase tracking-widest text-black/25 mb-4">Filter</p>
+                    {cats.map(c => (
+                      <button key={c.id} onClick={() => setF(c.id)}
+                        className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm transition-all ${f === c.id ? 'bg-[#f60030] text-white' : 'text-[#1a1a1a]/50 hover:bg-[#fff3d9] hover:text-[#1a1a1a]'}`}>
+                        {c.l}
+                      </button>
+                    ))}
+                  </div>
+                </SR>
+              </div>
+              <div className="md:col-span-3">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {filtered.map((opp, i) => (
+                    <SR key={opp.id} delay={i * 50}>
+                      <div className="border border-black/6 rounded-2xl p-6 hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
+                        <div className="flex items-start justify-between mb-4">
+                          <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${clr[opp.cat]}`}>{lbl[opp.cat]}</span>
+                          <span className="text-xs text-black/30">↓ {opp.dl}</span>
+                        </div>
+                        <h3 className="font-serif text-lg text-[#3b0918] mb-1">{opp.t}</h3>
+                        <p className="text-xs text-[#f60030] mb-3">{opp.o}</p>
+                        <p className="text-xs text-[#5a5a5a] leading-relaxed mb-5 flex-1">{opp.d}</p>
+                        <a href={opp.l} target="_blank" rel="noopener noreferrer" className="text-xs text-[#3b0918] hover:text-[#f60030] transition-colors self-start">Learn more →</a>
+                      </div>
+                    </SR>
+                  ))}
+                </div>
+                <SR>
+                  <div className="mt-6 bg-[#3b0918] rounded-2xl p-8 grid md:grid-cols-3 gap-6 items-center">
+                    <div className="md:col-span-2">
+                      <p className="font-serif text-xl text-[#fff3d9] mb-1">Know of an opportunity?</p>
+                      <p className="text-xs text-[#fff3d9]/45">Send it over and I'll add it to the list!</p>
+                    </div>
+                    <a href="mailto:erinmeryl@icloud.com?subject=Opportunity%20Submission"
+                      className="inline-block text-center px-6 py-3 bg-[#f60030] text-white rounded-full text-xs hover:bg-white hover:text-[#f60030] transition-colors">
+                      Submit →
+                    </a>
+                  </div>
+                </SR>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    };
+
+    // ── CONTACT ────────────────────────────────────────────────
+    const Contact = () => {
+      const [type, setType] = useState(null);
+      return (
+        <div className="bg-white pt-16">
+          <div className="bg-[#fff3d9] px-8 md:px-16 py-16 md:py-24">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-10 items-end">
+              <SR>
+                <p className="text-xs uppercase tracking-widest text-[#f60030] mb-4">Contact</p>
+                <h1 className="font-serif text-5xl md:text-6xl text-[#3b0918]">Let's Connect</h1>
+              </SR>
+              <SR delay={80}>
+                <p className="text-[#3b0918]/55 leading-relaxed">Whether you're a student, a brand, or looking for a speaker — I'd love to hear from you.</p>
+              </SR>
+            </div>
+          </div>
+
+          <section className="px-8 md:px-16 py-16">
+            <div className="max-w-7xl mx-auto">
+              {!type ? (
+                <div className="grid md:grid-cols-3 gap-5 max-w-2xl">
+                  {[
+                    { t: 'student', icon: '📚', l: "I'm a Student", d: 'Questions, advice, or just saying hi' },
+                    { t: 'brand',   icon: '🤝', l: 'Brand Partnership', d: 'Collaborations & campaigns' },
+                    { t: 'speaking',icon: '🎤', l: 'Speaking', d: 'Events & conferences' },
+                  ].map((opt, i) => (
+                    <SR key={opt.t} delay={i * 70}>
+                      <button onClick={() => setType(opt.t)}
+                        className="w-full p-7 border border-black/6 rounded-2xl hover:border-[#f60030]/40 hover:shadow-md transition-all text-left group">
+                        <div className="text-3xl mb-4">{opt.icon}</div>
+                        <h3 className="font-serif text-lg text-[#3b0918] mb-1">{opt.l}</h3>
+                        <p className="text-xs text-[#5a5a5a]">{opt.d}</p>
+                      </button>
+                    </SR>
+                  ))}
+                </div>
+              ) : (
+                <div className="max-w-sm">
+                  <button onClick={() => setType(null)} className="text-xs text-[#f60030] hover:underline mb-6 block">← Back</button>
+                  <SR>
+                    <div className="bg-[#fff3d9] rounded-2xl p-8">
+                      <h2 className="font-serif text-2xl text-[#3b0918] mb-6">
+                        {type === 'student' && 'Hey! 👋'}
+                        {type === 'brand' && 'Brand Partnership'}
+                        {type === 'speaking' && 'Speaking Inquiry'}
+                      </h2>
+                      {type === 'brand'
+                        ? <div>
+                            <a href="mailto:evie@84world.com" className="inline-block px-7 py-3.5 bg-[#f60030] text-white rounded-full text-sm hover:bg-[#3b0918] transition-colors">Email My Management →</a>
+                            <p className="mt-4 text-xs text-[#5a5a5a]">Connected directly with my management team.</p>
+                          </div>
+                        : <div>
+                            <a href="mailto:erinmeryl@icloud.com" className="inline-block px-7 py-3.5 bg-[#f60030] text-white rounded-full text-sm hover:bg-[#3b0918] transition-colors">Email Erin →</a>
+                            <p className="mt-4 text-xs text-[#5a5a5a]">
+                              {type === 'student' ? 'For questions, advice, or just to say hi.' : 'For speaking invitations, events or collaborations.'}
+                            </p>
+                          </div>
+                      }
+                    </div>
+                  </SR>
+                </div>
+              )}
+
+              <SR>
+                <div className="mt-12 bg-[#3b0918] rounded-2xl py-10 px-10 flex flex-wrap items-center justify-between gap-6">
+                  <p className="font-serif text-lg text-[#fff3d9]/40">Find me online</p>
+                  <div className="flex flex-wrap gap-8">
+                    {[
+                      ['Instagram','https://instagram.com/erinmerylstudy'],
+                      ['TikTok','https://tiktok.com/@erinmerylstudy'],
+                      ['YouTube','https://youtube.com/@erinmerylstudy'],
+                      ['LinkedIn','https://linkedin.com/in/erin-mcgurk'],
+                      ['Substack','https://erinmerylstudy.substack.com'],
+                    ].map(([n, u]) => (
+                      <a key={n} href={u} target="_blank" rel="noopener noreferrer"
+                        className="font-serif text-lg text-[#fff3d9] hover:text-[#f60030] transition-colors">{n}</a>
+                    ))}
+                  </div>
+                </div>
+              </SR>
+            </div>
+          </section>
+        </div>
+      );
+    };
+
+    // ── FOOTER ─────────────────────────────────────────────────
+    const Footer = ({ go }) => (
+      <footer className="bg-[#3b0918] px-8 md:px-16 py-16">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-10 mb-12">
+          <div className="md:col-span-2">
+            <button onClick={() => go('home')} className="font-serif text-2xl text-[#fff3d9] hover:text-[#f60030] transition-colors mb-3 block">erinmerylstudy</button>
+            <p className="text-xs text-[#fff3d9]/35 leading-relaxed max-w-xs">Making learning as addictive as social media.</p>
+          </div>
+          <div className="space-y-3">
+            {[['about','About'],['cv','CV'],['built',"Stuff I'm Building"]].map(([id, l]) => (
+              <button key={id} onClick={() => go(id)} className="block text-xs text-[#fff3d9]/35 hover:text-[#f60030] transition-colors">{l}</button>
             ))}
           </div>
-          <div className="flex justify-center gap-4 mb-12">
-            {['TT', 'IG', 'YT', 'LI'].map((s, i) => (
-              <a key={i} href="#" className="w-10 h-10 bg-[#fff3d9]/10 rounded-full flex items-center justify-center text-xs hover:bg-[#f60030] transition-colors">{s}</a>
+          <div className="space-y-3">
+            {[['community','Locked In'],['opportunities','Opportunities'],['contact','Contact']].map(([id, l]) => (
+              <button key={id} onClick={() => go(id)} className="block text-xs text-[#fff3d9]/35 hover:text-[#f60030] transition-colors">{l}</button>
             ))}
           </div>
-          <p className="text-[#fff3d9]/30 text-sm">© 2026 erinmerylstudy. All rights reserved.</p>
+        </div>
+        <div className="border-t border-[#fff3d9]/8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-[#fff3d9]/20">© 2026 erinmerylstudy. All rights reserved.</p>
+          <div className="flex gap-6">
+            {[['TikTok','https://tiktok.com/@erinmerylstudy'],['Instagram','https://instagram.com/erinmerylstudy'],['YouTube','https://youtube.com/@erinmerylstudy'],['LinkedIn','https://linkedin.com/in/erin-mcgurk']].map(([n,u]) => (
+              <a key={n} href={u} target="_blank" rel="noopener noreferrer" className="text-xs text-[#fff3d9]/25 hover:text-[#f60030] transition-colors">{n}</a>
+            ))}
+          </div>
         </div>
       </footer>
     );
 
-    // ============================================
-    // MAIN APP
-    // ============================================
+    // ── APP ────────────────────────────────────────────────────
     function App() {
-      const [currentPage, setCurrentPage] = useState('home');
-      useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [currentPage]);
+      const [page, setPage] = useState('home');
+      const go = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
-      // EM2 has its own layout
-      if (currentPage === 'em2') {
-        return <EM2Page setCurrentPage={setCurrentPage} />;
-      }
-
-      const renderPage = () => {
-        switch (currentPage) {
-          case 'home': return <HomePage setCurrentPage={setCurrentPage} />;
-          case 'about': return <AboutPage />;
-          case 'mission': return <MissionPage setCurrentPage={setCurrentPage} />;
-          case 'students': return <StudentsPage />;
-          case 'projects': return <ProjectsPage />;
-          case 'media': return <MediaKitPage setCurrentPage={setCurrentPage} />;
-          case 'contact': return <ContactPage />;
-          default: return <HomePage setCurrentPage={setCurrentPage} />;
-        }
-      };
+      const pages = { home: <Home go={go} />, about: <About />, community: <Community />, built: <Built />, cv: <CV />, opportunities: <Opps />, contact: <Contact /> };
 
       return (
         <>
-          <MainNavigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
-          {renderPage()}
-          <Footer setCurrentPage={setCurrentPage} />
+          <Nav page={page} go={go} />
+          {pages[page] || <Home go={go} />}
+          <Footer go={go} />
         </>
       );
     }
