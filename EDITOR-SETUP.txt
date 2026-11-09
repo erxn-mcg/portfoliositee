@@ -1,0 +1,30 @@
+Pinboard blog and writing editor
+
+Prepared for erxn-mcg/portfoliositee on branch codex/pinboard-notes-admin.
+
+Publishable files
+The configuration is in the repository root as .pages.yml. The root index.html includes the Patreon change and a link to Notes. Existing CNAME, images, and favicons are preserved. No build tools or backend server are required by these files.
+
+One-time editor setup
+1. Open https://app.pagescms.org/ and sign in with GitHub.
+2. Install/authorize Pages CMS for erxn-mcg/portfoliositee only. This gives the editor permission to save notes and uploads in that repository. The owner must complete this permission step.
+3. Select the branch containing .pages.yml. Use a review branch initially; use the production publishing branch when ready to go live.
+4. Open Writing. Add an item with a title, unique note address, date, topic, short introduction, and body. Optionally upload a cover image. Add a useful image description when uploading a cover.
+5. Save when ready. The editor writes blog/notes.json and uploads/notes/* to GitHub. The blog reads this file automatically. New categories become filters automatically. Notes appear newest first.
+
+Notes are plain text, with line breaks and paragraphs preserved. Each note has a shareable URL such as /blog/?note=a-new-thought.
+
+Public repository behavior
+This repository is public. All saved notes and uploads are publicly accessible, even if a future UI were to hide them. No private-draft switch is provided. Keep private drafts outside this repository. To remove a note from the current blog, remove it in the Writing list and save; historical copies may remain in Git history.
+
+Authentication
+/admin/ is a public entrance to the writing editor, not a password gate. Actual editing happens at app.pagescms.org and is authorized by GitHub. No credentials, access tokens, or client-side passwords are embedded in the website.
+
+Connection setup
+GitHub write access has been restored. Pages CMS separately needs the owner's one-time GitHub authorization before its editor can upload images or save notes. That authorization is not granted by these files. Review this branch before merging; merging into the GitHub Pages publishing branch can update the live site.
+
+Official references
+https://pagescms.org/docs/quick-start/
+https://pagescms.org/docs/configuration/
+https://pagescms.org/docs/configuration/content/list/
+https://pagescms.org/docs/configuration/media/
