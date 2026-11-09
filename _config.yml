@@ -1,0 +1,16 @@
+title: Erin Meryl McGurk
+url: https://erinmerylstudy.com
+baseurl: ""
+collections:
+  notes:
+    output: true
+    permalink: /blog/:name/
+defaults:
+  - scope:
+      path: ""
+      type: notes
+    values:
+      layout: note
+      kind: Note
+exclude:
+  - BLOG-GUIDE.md

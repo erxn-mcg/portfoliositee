@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="{{ page.excerpt | strip_html | escape }}"><title>{{ page.title | escape }} · Erin Meryl McGurk</title><link rel="canonical" href="{{ page.url | absolute_url }}"><link rel="stylesheet" href="{{ '/blog/styles.css' | relative_url }}"></head>
+<body><header><a class="brand" href="{{ '/' | relative_url }}">ERIN MERYL<br>McGURK<span>*</span></a><nav><a href="{{ '/blog/' | relative_url }}">notes and thoughts</a></nav></header>
+<main class="reading"><a class="back" href="{{ '/blog/' | relative_url }}">← Back to the Pinboard</a><p class="eyebrow">{{ page.topic | escape }} / {{ page.kind | default: 'Note' | escape }} / {{ page.date | date: '%-d %b %Y' }}</p><h1>{{ page.title | escape }}</h1><p class="excerpt">{{ page.excerpt | escape }}</p>
+{% if page.image and page.image != '' %}<img class="article-cover" src="{{ page.image | relative_url | escape }}" alt="{{ page.image_alt | escape }}">{% endif %}
+<div class="note-content">{{ content }}</div></main>
+<footer><span>© {{ site.time | date: '%Y' }} Erin Meryl McGurk</span><a href="{{ '/blog/' | relative_url }}">Back to the Pinboard ↗</a></footer></body></html>
